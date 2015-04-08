@@ -828,23 +828,22 @@ Supports protocol V3 only, so backend version must be &gt;= 7.4.
 <div class="ulist"><ul>
 <li>
 <p>
-[usage.html Usage documentation]
+<a href="usage.html">Usage documentation</a>
 </p>
 </li>
 <li>
 <p>
-[config.html Config file documentation]
+<a href="config.html">Config file documentation</a>
 </p>
 </li>
 <li>
 <p>
-[todo.html TODO list]
+<a href="todo.html">TODO list</a>
 </p>
 </li>
 <li>
 <p>
-[faq.html FAQ]:
- Load-balancing, SSL, prepared statements, online restart.
+<a href="faq.html">FAQ</a>: Load-balancing, SSL, prepared statements, online restart.
 </p>
 </li>
 </ul></div>
@@ -857,18 +856,80 @@ Supports protocol V3 only, so backend version must be &gt;= 7.4.
 compatible with !PgBouncer pooling modes.  Note that <em>transaction</em>
 pooling breaks client expectations of server and can be used only
 if application cooperates by not using non-working features.</p></div>
-<div class="paragraph"><p>|| Feature                          || Session pooling || Transaction pooling ||
-|| Startup parameters               || Yes [0]         || Yes [0]             ||
-|| SET/RESET                        || Yes             || Never               ||
-|| LISTEN/NOTIFY                    || Yes             || Never               ||
-|| WITHOUT HOLD CURSOR              || Yes             || Yes                 ||
-|| WITH HOLD CURSOR                 || Yes [1]         || Never               ||
-|| Protocol-level prepared plans    || Yes [1]         || No [2]              ||
-|| PREPARE / DEALLOCATE             || Yes [1]         || Never               ||
-|| ON COMMIT DROP temp tables       || Yes             || Yes                 ||
-|| PRESERVE/DELETE ROWS temp tables || Yes [1]         || Never               ||
-|| Cached plan reset                || Yes [1]         || Yes [1]             ||
-|| LOAD statement                   || Yes             || Never               ||</p></div>
+<div class="tableblock">
+<table rules="all"
+width="60%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="50%" />
+<col width="25%" />
+<col width="25%" />
+<thead>
+<tr>
+<th align="left" valign="top"> Feature                          </th>
+<th align="left" valign="top"> Session pooling </th>
+<th align="left" valign="top"> Transaction pooling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Startup parameters</p></td>
+<td align="left" valign="top"><p class="table">Yes [0]</p></td>
+<td align="left" valign="top"><p class="table">Yes [0]</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">SET/RESET</p></td>
+<td align="left" valign="top"><p class="table">Yes</p></td>
+<td align="left" valign="top"><p class="table">Never</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">LISTEN/NOTIFY</p></td>
+<td align="left" valign="top"><p class="table">Yes</p></td>
+<td align="left" valign="top"><p class="table">Never</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">WITHOUT HOLD CURSOR</p></td>
+<td align="left" valign="top"><p class="table">Yes</p></td>
+<td align="left" valign="top"><p class="table">Yes</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">WITH HOLD CURSOR</p></td>
+<td align="left" valign="top"><p class="table">Yes [1]</p></td>
+<td align="left" valign="top"><p class="table">Never</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Protocol-level prepared plans</p></td>
+<td align="left" valign="top"><p class="table">Yes [1]</p></td>
+<td align="left" valign="top"><p class="table">No [2]</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">PREPARE / DEALLOCATE</p></td>
+<td align="left" valign="top"><p class="table">Yes [1]</p></td>
+<td align="left" valign="top"><p class="table">Never</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">ON COMMIT DROP temp tables</p></td>
+<td align="left" valign="top"><p class="table">Yes</p></td>
+<td align="left" valign="top"><p class="table">Yes</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">PRESERVE/DELETE ROWS temp tables</p></td>
+<td align="left" valign="top"><p class="table">Yes [1]</p></td>
+<td align="left" valign="top"><p class="table">Never</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Cached plan reset</p></td>
+<td align="left" valign="top"><p class="table">Yes [1]</p></td>
+<td align="left" valign="top"><p class="table">Yes [1]</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">LOAD statement</p></td>
+<td align="left" valign="top"><p class="table">Yes</p></td>
+<td align="left" valign="top"><p class="table">Never</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -895,7 +956,7 @@ if application cooperates by not using non-working features.</p></div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-04-08 20:54:03 EEST
+Last updated 2015-04-08 21:28:03 EEST
 </div>
 </div>
 </body>
