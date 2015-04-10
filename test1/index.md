@@ -1,3 +1,0 @@
-# markdown index
-
-index test

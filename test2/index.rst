@@ -1,6 +1,0 @@
-rst index
-=========
-
-
-test index
-
