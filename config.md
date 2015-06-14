@@ -23,9 +23,9 @@ SYNOPSIS
 DESCRIPTION
 -----------
 
-Config file is in "ini" format. Section names are between " and ". Lines
-starting with ";" or "" are taken as comments and ignored. The
-characters ";" and "" are not recognized when they appear later in the
+Config file is in "ini" format. Section names are between "[" and "]". Lines
+starting with ";" or "#" are taken as comments and ignored. The
+characters ";" and "#" are not recognized when they appear later in the
 line.
 
 SECTION [pgbouncer]
