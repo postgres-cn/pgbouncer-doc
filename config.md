@@ -651,6 +651,19 @@ libpq is not used, so not all features from libpq can be used.
 Set the pool mode to be used for all connections from this user. If not
 set, the database or default pool\_mode is used.
 
+INCLUDE DIRECTIVE
+-----------------
+
+The PgBouncer config file can contain include directives, which specify
+another config file to read and process. This allows for splitting the
+configuration file into physically separate parts. The include directives look
+like this:
+
+    %include filename
+
+If the file name is not absolute path it is taken as relative to current
+working directory.
+
 AUTHENTICATION FILE FORMAT
 --------------------------
 
