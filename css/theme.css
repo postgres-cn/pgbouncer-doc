@@ -42,10 +42,26 @@ body {
     font-size: 1.3em;
 }
 
+.well h2 {
+	font-size: 1.2em;
+}
+
+.well h3 {
+	font-size: 1.1em;
+}
+
 .author {
     color: #ee4444;
 }
 
 .author a {
     color: #ee4444;
+}
+
+/* Hack to get around the menubar having position: fixed; */
+.clickable-header:before {
+    content: "";
+    display: block;
+    height: 60px;
+    margin: -60px 0 0;
 }
