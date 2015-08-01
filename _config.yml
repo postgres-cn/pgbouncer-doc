@@ -27,6 +27,7 @@ comments: false
 permalink: /:year/:month/:title
 paginate: 3
 
+excerpt_separator: <!--more-->
 highlighter: pygments
 markdown: redcarpet
 redcarpet:
