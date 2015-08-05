@@ -1,39 +1,23 @@
 ---
 layout: toc
-title: PgBouncer config file
+title: PgBouncer config
 ---
 
-pgbouncer(5)
-============
+pgbouncer.ini
+=============
 
-NAME
-----
-
-pgbouncer - Lightweight connection pooler for PostgreSQL.
-
-SYNOPSIS
---------
-
-    [databases]
-    db = ...
-
-    [pgbouncer]
-    ...
-
-DESCRIPTION
+Description
 -----------
 
-Config file is in "ini" format. Section names are between "[" and "]". Lines
-starting with ";" or "#" are taken as comments and ignored. The
+Config file is in "ini" format. Section names are between "[" and "]".
+Lines starting with ";" or "#" are taken as comments and ignored. The
 characters ";" and "#" are not recognized when they appear later in the
 line.
 
-SECTION [pgbouncer]
--------------------
+Generic settings
+----------------
 
-### Generic settings
-
-#### logfile
+### logfile
 
 Specifies log file. Log file is kept open so after rotation `kill -HUP`
 or on console `RELOAD;` should be done. Note: On Windows machines, the
@@ -41,13 +25,13 @@ service must be stopped and started.
 
 Default: not set.
 
-#### pidfile
+### pidfile
 
 Specifies the pid file. Without a pidfile, daemonization is not allowed.
 
 Default: not set.
 
-#### listen\_addr
+### listen_addr
 
 Specifies list of addresses, where to listen for TCP connections. You
 may also use `*` meaning "listen on all addresses". When not set, only
@@ -57,103 +41,122 @@ Addresses can be specified numerically (IPv4/IPv6) or by name.
 
 Default: not set
 
-#### listen\_port
+### listen_port
 
 Which port to listen on. Applies to both TCP and Unix sockets.
 
 Default: 6432
 
-#### unix\_socket\_dir
+### unix_socket_dir
 
 Specifies location for Unix sockets. Applies to both listening socket
 and server connections. If set to an empty string, Unix sockets are
 disabled. Required for online reboot (-R) to work. Note: Not supported
 on Windows machines.
 
-Default: `/tmp`
+Default: /tmp
 
-#### unix\_socket\_mode
+### unix_socket_mode
 
 Filesystem mode for unix socket.
 
 Default: 0777
 
-#### unix\_socket\_group
+### unix_socket_group
 
 Group name to use for unix socket.
 
 Default: not set
 
-#### user
+### user
 
 If set, specifies the Unix user to change to after startup. Works only
-if PgBouncer is started as root or if `user` is the same as the current
-user. Note: Not supported on Windows machines.
+if PgBouncer is started as root or if it's already running as given
+user.
+
+Note: Not supported on Windows machines.
 
 Default: not set
 
-#### auth\_file
+### auth_file
 
 The name of the file to load user names and passwords from. The file
-format is the same as the PostgreSQL 8.x pg\_auth/pg\_pwd file, so this
+format is the same as the PostgreSQL 8.x pg_auth/pg_pwd file, so this
 setting can be pointed directly to one of those backend files. Since
 version 9.0, PostgreSQL does not use such text file, so it must be
-generated manually. See section "AUTHENTICATION FILE FORMAT" below about
-details.
+generated manually. See section [Authentication file format](#authentication-file-format) below
+about details.
 
 Default: not set.
 
-#### auth\_type
+### auth_hba_file
+
+HBA configuration file to use when [auth_type](#auth_type) is `hba`.
+
+Default: not set
+
+### auth_type
 
 How to authenticate users.
 
- md5
-  ~ Use MD5-based password check. `auth_file` may contain both
+`hba`
+  - Actual auth type is loaded from [auth_hba_file](#auth_hba_file). This allows
+    different authentication methods different access paths. Example:
+    connection over unix socket use `peer` auth method, connection over
+    TCP must use TLS.
+
+`cert`
+  - Client must connect over TLS connection with valid client cert.
+    Username is then taken from CommonName field from certificate.
+
+`md5`
+  - Use MD5-based password check. [auth_file](#auth_file) may contain both
     MD5-encrypted or plain-text passwords. This is the default
     authentication method.
 
- crypt
-  ~ Use crypt(3) based password check. `auth_file` must contain
-    plain-text passwords.
+`crypt`
+  - Use crypt(3) based password check. [auth_file](#auth_file) must contain
+    plain-text passwords. Deprecated, removed in PostgreSQL 8.4.
 
- plain
-  ~ Clear-text password is sent over wire.
+`plain`
+  - Clear-text password is sent over wire. Deprecated.
 
- trust
-  ~ No authentication is done. Username must still exist in `auth_file`.
+`trust`
+  - No authentication is done. Username must still exist in
+    [auth_file](#auth_file).
 
- any
-  ~ Like the `trust` method, but the username given is ignored. Requires
+`any`
+  - Like the `trust` method, but the username given is ignored. Requires
     that all databases are configured to log in as specific user.
     Additionally, the console database allows any user to log in as
     admin.
 
-#### auth\_query
+### auth_query
 
-Query to load user’s password from db.
+Query to load user's password from db.
 
-Default: SELECT usename, passwd FROM pg\_shadow WHERE usename=$1
+Default: `SELECT usename, passwd FROM pg_shadow WHERE usename=$1`
 
-#### pool\_mode
+### pool_mode
 
 Specifies when a server connection can be reused by other clients.
 
- session
-  ~ Server is released back to pool after client disconnects. Default.
+`session`
+  - Server is released back to pool after client disconnects. Default.
 
- transaction
-  ~ Server is released back to pool after transaction finishes.
+`transaction`
+  - Server is released back to pool after transaction finishes.
 
- statement
-  ~ Server is released back to pool after query finishes. Long
+`statement`
+  - Server is released back to pool after query finishes. Long
     transactions spanning multiple statements are disallowed in this
     mode.
 
-#### max\_client\_conn
+### max_client_conn
 
 Maximum number of client connections allowed. When increased then the
 file descriptor limits should also be increased. Note that actual number
-of file descriptors used is more than max\_client\_conn. Theoretical
+of file descriptors used is more than max_client_conn. Theoretical
 maximum used is:
 
     max_client_conn + (max_pool_size * total_databases * total_users)
@@ -173,14 +176,14 @@ does not apply in a Windows environment.
 
 Default: 100
 
-#### default\_pool\_size
+### default_pool_size
 
 How many server connections to allow per user/database pair. Can be
 overridden in the per-database configuration.
 
 Default: 20
 
-#### min\_pool\_size
+### min_pool_size
 
 Add more server connections to pool if below this number. Improves
 behaviour when usual load comes suddenly back after period of total
@@ -188,20 +191,20 @@ inactivity.
 
 Default: 0 (disabled)
 
-#### reserve\_pool\_size
+### reserve_pool_size
 
 How many additional connections to allow to a pool. 0 disables.
 
 Default: 0 (disabled)
 
-#### reserve\_pool\_timeout
+### reserve_pool_timeout
 
 If a client has not been serviced in this many seconds, pgbouncer
 enables use of additional connections from reserve pool. 0 disables.
 
 Default: 5.0
 
-#### max\_db\_connections
+### max_db_connections
 
 Do not allow more than this many connections per-database (regardless of
 pool - i.e. user). It should be noted that when you hit the limit,
@@ -213,7 +216,7 @@ be opened for the waiting pool.
 
 Default: unlimited
 
-#### max\_user\_connection
+### max_user_connections
 
 Do not allow more than this many connections per-user (regardless of
 pool - i.e. user). It should be noted that when you hit the limit,
@@ -223,7 +226,7 @@ connection for the first pool is still open. Once the server connection
 closes (due to idle timeout), a new server connection will immediately
 be opened for the waiting pool.
 
-#### server\_round\_robin
+### server_round_robin
 
 By default, pgbouncer reuses server connections in LIFO (last-in,
 first-out) manner, so that few connections get the most load. This gives
@@ -234,7 +237,7 @@ load.
 
 Default: 0
 
-#### ignore\_startup\_parameters
+### ignore_startup_parameters
 
 By default, PgBouncer allows only parameters it can keep track of in
 startup packets - `client_encoding`, `datestyle`, `timezone` and
@@ -246,7 +249,7 @@ handled by admin and it can ignore them.
 
 Default: empty
 
-#### disable\_pqexec
+### disable_pqexec
 
 Disable Simple Query protocol (PQexec). Unlike Extended Query protocol,
 Simple Query allows multiple queries in one packet, which allows some
@@ -256,73 +259,99 @@ protocol will stay working.
 
 Default: 0
 
-#### application\_name\_add\_host
+### application_name_add_host
 
 Add the client host address and port to the application name setting set
 on connection start. This helps in identifying the source of bad queries
-etc. The setting will be overwritten without any detection if the
-application does SET APPLICATION\_NAME after connecting. Note that this
-is on by default.
+etc. This logic applies only on start of connection, if
+application_name is later changed with SET, pgbouncer does not change
+it again.
 
-Default: 1
+Default: 0
 
-### Log settings
+### conffile
 
-#### syslog
+Show location of current config file. Changing it will make PgBouncer
+use another config file for next `RELOAD` / `SIGHUP`.
+
+Default: file from command line.
+
+### service_name
+
+Used on win32 service registration.
+
+Default: pgbouncer
+
+### job_name
+
+Alias for [service_name](#service_name).
+
+Log settings
+------------
+
+### syslog
 
 Toggles syslog on/off As for windows environment, eventlog is used
 instead.
 
 Default: 0
 
-#### syslog\_ident
+### syslog_ident
 
 Under what name to send logs to syslog.
 
 Default: pgbouncer (program name)
 
-#### syslog\_facility
+### syslog_facility
 
-Under what facility to send logs to syslog. Possibilities: auth,
-authpriv, daemon, user, local0-7
+Under what facility to send logs to syslog. Possibilities: `auth`,
+`authpriv`, `daemon`, `user`, `local0-7`.
 
 Default: daemon
 
-#### log\_connections
+### log_connections
 
 Log successful logins.
 
 Default: 1
 
-#### log\_disconnections
+### log_disconnections
 
 Log disconnections with reasons.
 
 Default: 1
 
-#### log\_pooler\_errors
+### log_pooler_errors
 
 Log error messages pooler sends to clients.
 
 Default: 1
 
-#### stats\_period
+### stats_period
 
 Period for writing aggregated stats into log.
 
 Default: 60
 
-### Console access control
+### verbose
 
-#### admin\_users
+Increase verbosity. Mirrors "-v" switch on command line. Using "-v -v"
+on command line is same as `verbose=2` in config.
+
+Default: 0
+
+Console access control
+----------------------
+
+### admin_users
 
 Comma-separated list of database users that are allowed to connect and
-run all commands on console. Ignored when `auth_mode=any`, in which case
-any username is allowed in as admin.
+run all commands on console. Ignored when [auth_type](#auth_type) is `any`, in
+which case any username is allowed in as admin.
 
 Default: empty
 
-#### stats\_users
+### stats_users
 
 Comma-separated list of database users that are allowed to connect and
 run read-only queries on console. Thats means all SHOW commands except
@@ -330,9 +359,10 @@ SHOW FDS.
 
 Default: empty.
 
-### Connection sanity checks, timeouts
+Connection sanity checks, timeouts
+----------------------------------
 
-#### server\_reset\_query
+### server_reset_query
 
 Query sent to server on connection release, before making it available
 to other clients. At that moment no transaction is in progress so it
@@ -346,14 +376,14 @@ for 8.3 and above its enough to do:
 
     server_reset_query = DISCARD ALL;
 
-When transaction pooling is used, the `server_reset_query` should be
-empty, as clients should not use any session features. If client does
+When transaction pooling is used, the [server_reset_query](#server_reset_query) should
+be empty, as clients should not use any session features. If client does
 use session features, then they will be broken as transaction pooling
 will not guarantee that next query will be run on same connection.
 
 Default: DISCARD ALL
 
-#### server\_check\_delay
+### server_check_delay
 
 How long to keep released connections available for immediate re-use,
 without running sanity-check queries on it. If 0 then the query is ran
@@ -361,7 +391,7 @@ always.
 
 Default: 30.0
 
-#### server\_check\_query
+### server_check_query
 
 Simple do-nothing query to check if the server connection is alive.
 
@@ -369,7 +399,7 @@ If an empty string, then sanity checking is disabled.
 
 Default: SELECT 1;
 
-#### server\_lifetime
+### server_lifetime
 
 The pooler will try to close server connections that have been connected
 longer than this. Setting it to 0 means the connection is to be used
@@ -377,28 +407,28 @@ only once, then closed. [seconds]
 
 Default: 3600.0
 
-#### server\_idle\_timeout
+### server_idle_timeout
 
 If a server connection has been idle more than this many seconds it will
 be dropped. If 0 then timeout is disabled. [seconds]
 
 Default: 600.0
 
-#### server\_connect\_timeout
+### server_connect_timeout
 
-If connection and login won’t finish in this amount of time, the
+If connection and login won't finish in this amount of time, the
 connection will be closed. [seconds]
 
 Default: 15.0
 
-#### server\_login\_retry
+### server_login_retry
 
 If login failed, because of failure from connect() or authentication
 that pooler waits this much before retrying to connect. [seconds]
 
 Default: 15.0
 
-#### client\_login\_timeout
+### client_login_timeout
 
 If a client connects but does not manage to login in this amount of
 time, it will be disconnected. Mainly needed to avoid dead connections
@@ -406,15 +436,15 @@ stalling SUSPEND and thus online restart. [seconds]
 
 Default: 60.0
 
-#### autodb\_idle\_timeout
+### autodb_idle_timeout
 
-If the automatically created (via "\*") database pools have been unused
+If the automatically created (via "*") database pools have been unused
 this many seconds, they are freed. The negative aspect of that is that
 their statistics are also forgotten. [seconds]
 
 Default: 3600.0
 
-#### dns\_max\_ttl
+### dns_max_ttl
 
 How long the DNS lookups can be cached. If a DNS lookup returns several
 answers, pgbouncer will robin-between them in the meantime. Actual DNS
@@ -422,38 +452,177 @@ TTL is ignored. [seconds]
 
 Default: 15.0
 
-#### dns\_nxdomain\_ttl
+### dns_nxdomain_ttl
 
 How long error and NXDOMAIN DNS lookups can be cached. [seconds]
 
 Default: 15.0
 
-#### dns\_zone\_check\_period
+### dns_zone_check_period
 
 Period to check if zone serial has changed.
 
 PgBouncer can collect dns zones from hostnames (everything after first
 dot) and then periodically check if zone serial changes. If it notices
 changes, all hostnames under that zone are looked up again. If any host
-ip changes, it’s connections are invalidated.
+ip changes, it's connections are invalidated.
 
 Works only with UDNS backend (`--with-udns` to configure).
 
 Default: 0.0 (disabled)
 
-### Dangerous timeouts
+TLS settings
+------------
+
+### client_tls_sslmode
+
+TLS mode to use for connections from clients. TLS connections are
+disabled by default. When enabled, [client_tls_key_file](#client_tls_key_file) and
+[client_tls_cert_file](#client_tls_cert_file) must be also configured to set up key and
+cert PgBouncer uses to accept client connections.
+
+`disabled`
+  - Plain TCP. If client requests TLS, it's ignored. Default.
+
+`allow`
+  - If client requests TLS, it is used. If not, plain TCP is used. If
+    client uses client-certificate, it is not validated.
+
+`prefer`
+  - Same as `allow`.
+
+`require`
+  - Client must use TLS. If not, client connection is rejected. If
+    client uses client-certificate, it is not validated.
+
+`verify-ca`
+  - Client must use TLS with valid client certificate.
+
+`verify-full`
+  - Same as `verify-ca`.
+
+### client_tls_key_file
+
+Private key for PgBouncer to accept client connections.
+
+Default: not set.
+
+### client_tls_cert_file
+
+Certificate for private key. Clients can validate it.
+
+Default: not set.
+
+### client_tls_ca_file
+
+Root certificate file to validate client certificates.
+
+Default: unset.
+
+### client_tls_protocols
+
+Which TLS protocol versions are allowed. Allowed values: `tlsv1.0`,
+`tlsv1.1`, `tlsv1.2`. Shortcuts: `all` (tlsv1.0,tlsv1.1,tlsv1.2),
+`secure` (tlsv1.2), `legacy` (all).
+
+Default: `all`
+
+### client_tls_ciphers
+
+Default: `fast`
+
+### client_tls_ecdhcurve
+
+Elliptic Curve name to use for ECDH key exchanges.
+
+Allowed values: `none` (DH is disabled), `auto` (256-bit ECDH), curve
+name.
+
+Default: `auto`
+
+### client_tls_dheparams
+
+DHE key exchange type.
+
+Allowed values: `none` (DH is disabled), `auto` (2048-bit DH), `legacy`
+(1024-bit DH).
+
+Default: `auto`
+
+### server_tls_sslmode
+
+TLS mode to use for connections to PostgreSQL servers. TLS connections
+are disabled by default.
+
+`disabled`
+  - Plain TCP. TCP is not event requested from server. Default.
+
+`allow`
+  - FIXME: if server rejects plain, try TLS?
+
+`prefer`
+  - TLS connection is always requested first from PostgreSQL, when
+    refused connection will be establised over plain TCP. Server
+    certificate is not validated.
+
+`require`
+  - Connection must go over TLS. If server rejects it, plain TCP is not
+    attempted. Server certificate is not validated.
+
+`verify-ca`
+  - Connection must go over TLS and server certificate must be valid
+    according to [server_tls_ca_file](#server_tls_ca_file). Server hostname is not
+    checked against certificate.
+
+`verify-full`
+  - Connection must go over TLS and server certificate must be valid
+    according to [server_tls_ca_file](#server_tls_ca_file). Server hostname must match
+    certificate info.
+
+### server_tls_ca_file
+
+Root certificate file to validate PostgreSQL server certificates.
+
+Default: unset.
+
+### server_tls_key_file
+
+Private key for PgBouncer to authenticate against PostgreSQL server.
+
+Default: not set.
+
+### server_tls_cert_file
+
+Certificate for private key. PostgreSQL server can validate it.
+
+Default: not set.
+
+### server_tls_protocols
+
+Which TLS protocol versions are allowed. Allowed values: `tlsv1.0`,
+`tlsv1.1`, `tlsv1.2`. Shortcuts: `all` (tlsv1.0,tlsv1.1,tlsv1.2),
+`secure` (tlsv1.2), `legacy` (all).
+
+Default: `all`
+
+### server_tls_ciphers
+
+Default: `fast`
+
+Dangerous timeouts
+------------------
 
 Setting following timeouts cause unexpected errors.
 
-#### query\_timeout
+### query_timeout
 
 Queries running longer than that are canceled. This should be used only
-with slightly smaller server-side statement\_timeout, to apply only for
+with slightly smaller server-side statement_timeout, to apply only for
 network problems. [seconds]
 
 Default: 0.0 (disabled)
 
-#### query\_wait\_timeout
+### query_wait_timeout
 
 Maximum time queries are allowed to spend waiting for execution. If the
 query is not assigned to a server during that time, the client is
@@ -462,7 +631,7 @@ up connections. [seconds]
 
 Default: 0.0 (disabled)
 
-#### client\_idle\_timeout
+### client_idle_timeout
 
 Client connections idling longer than this many seconds are closed. This
 should be larger than the client-side connection lifetime settings, and
@@ -470,16 +639,17 @@ only used for network problems. [seconds]
 
 Default: 0.0 (disabled)
 
-#### idle\_transaction\_timeout
+### idle_transaction_timeout
 
 If client has been in "idle in transaction" state longer, it will be
 disconnected. [seconds]
 
 Default: 0.0 (disabled)
 
-### Low-level network settings
+Low-level network settings
+--------------------------
 
-#### pkt\_buf
+### pkt_buf
 
 Internal buffer size for packets. Affects size of TCP packets sent and
 general memory usage. Actual libpq packets can be larger than this so,
@@ -487,7 +657,7 @@ no need to set it large.
 
 Default: 2048
 
-#### max\_packet\_size
+### max_packet_size
 
 Maximum size for Postgres packets that PgBouncer allows through. One
 packet is either one query or one resultset row. Full resultset can be
@@ -495,7 +665,7 @@ larger.
 
 Default: 2147483647
 
-#### listen\_backlog
+### listen_backlog
 
 Backlog argument for listen(2). Determines how many new unanswered
 connection attempts are kept in queue. When queue is full, further new
@@ -503,47 +673,55 @@ connections are dropped.
 
 Default: 128
 
-#### sbuf\_loopcnt
+### sbuf_loopcnt
 
 How many times to process data on one connection, before proceeding.
 Without this limit, one connection with a big resultset can stall
-PgBouncer for a long time. One loop processes one `pkt_buf` amount of
-data. 0 means no limit.
+PgBouncer for a long time. One loop processes one [pkt_buf](#pkt_buf) amount
+of data. 0 means no limit.
 
 Default: 5
 
-#### tcp\_defer\_accept
+### suspend_timeout
+
+How many seconds to wait for buffer flush during SUSPEND or reboot (-R).
+Connection is dropped if flush does not succeed.
+
+Default: 10
+
+### tcp_defer_accept
 
 For details on this and other tcp options, please see `man 7 tcp`.
 
 Default: 45 on Linux, otherwise 0
 
-#### tcp\_socket\_buffer
+### tcp_socket_buffer
 
 Default: not set
 
-#### tcp\_keepalive
+### tcp_keepalive
 
 Turns on basic keepalive with OS defaults.
 
-On Linux, the system defaults are tcp\_keepidle=7200, tcp\_keepintvl=75,
-tcp\_keepcnt=9. They are probably similar on other OS-es.
+On Linux, the system defaults are **tcp_keepidle=7200**,
+**tcp_keepintvl=75**, **tcp_keepcnt=9**. They are probably similar on
+other OS-es.
 
 Default: 1
 
-#### tcp\_keepcnt
+### tcp_keepcnt
 
 Default: not set
 
-#### tcp\_keepidle
+### tcp_keepidle
 
 Default: not set
 
-#### tcp\_keepintvl
+### tcp_keepintvl
 
 Default: not set
 
-SECTION [databases]
+Section [databases]
 -------------------
 
 This contains key=value pairs where key will be taken as a database name
@@ -551,120 +729,107 @@ and value as a libpq connect-string style list of key=value pairs. As
 actual libpq is not used, so not all features from libpq can be used
 (service=, .pgpass).
 
-Database name can contain characters [0-9A-Za-z\_.-] without quoting.
-Names that contain other chars need to be quoted with standard SQL ident
+Database name can contain characters `_0-9A-Za-z` without quoting. Names
+that contain other chars need to be quoted with standard SQL ident
 quoting: double quotes where "" is taken as single quote.
 
-"\*" acts as fallback database: if the exact name does not exist, its
+"*" acts as fallback database: if the exact name does not exist, its
 value is taken as connect string for requested database. Such
 automatically created database entries are cleaned up if they stay idle
-longer then the time specified in `autodb_idle_timeout` parameter.
+longer then the time specified in [autodb_idle_timeout](#autodb_idle_timeout) parameter.
 
-### Location parameters
-
-#### dbname
+### dbname
 
 Destination database name.
 
 Default: same as client-side database name.
 
-#### host
+### host
 
 Hostname or IP address to connect to. Hostnames are resolved on connect
-time, the result is cached per `dns_max_ttl` parameter. If DNS returns
+time, the result is cached per +dns_max_ttl+ parameter. If DNS returns
 several results, they are used in round-robin manner.
 
 Default: not set, meaning to use a Unix socket.
 
-#### port
+### port
 
 Default: 5432
 
-#### user, password
+### user, password
 
-If `user=` is set, all connections to the destination database will be
+If +user=+ is set, all connections to the destination database will be
 done with the specified user, meaning that there will be only one pool
 for this database.
 
 Otherwise PgBouncer tries to log into the destination database with
 client username, meaning that there will be one pool per user.
 
-#### auth\_user
+### auth_user
 
-If `auth_user` is set, any user not specified in auth\_file will be
-queried from pg\_shadow in the database using auth\_user. Auth\_user’s
-password will be taken from auth\_file.
+If +auth_user+ is set, any user not specified in auth_file will be
+queried from pg_shadow in the database using auth_user. Auth_user's
+password will be taken from auth_file.
 
-### Pool configuration
-
-#### pool\_size
+### pool_size
 
 Set maximum size of pools for this database. If not set, the
-default\_pool\_size is used.
+default_pool_size is used.
 
-#### connect\_query
+### connect_query
 
 Query to be executed after a connection is established, but before
 allowing the connection to be used by any clients. If the query raises
 errors, they are logged but ignored otherwise.
 
-#### pool\_mode
+### pool_mode
 
 Set the pool mode specific to this database. If not set, the default
-pool\_mode is used.
+pool_mode is used.
 
-#### max\_db\_connections
+### max_db_connections
 
 Configure a database-wide maximum (i.e. all pools within the database
 will not have more than this many server connections).
 
-### Extra parameters
+### client_encoding
 
-They allow setting default parameters on server connection.
+Ask specific +client_encoding+ from server.
 
-Note that since version 1.1 PgBouncer tracks client changes for their
-values, so their use in pgbouncer.ini is deprecated now.
-
-#### client\_encoding
-
-Ask specific `client_encoding` from server.
-
-#### datestyle
+### datestyle
 
 Ask specific `datestyle` from server.
 
-#### timezone
+### timezone
 
-Ask specific `timezone` from server.
+Ask specific **timezone** from server.
 
-SECTION [users]
+Section [users]
 ---------------
 
 This contains key=value pairs where key will be taken as a user name and
 value as a libpq connect-string style list of key=value pairs. As actual
 libpq is not used, so not all features from libpq can be used.
 
-### Pool configuration
-
-#### pool\_mode
+### pool_mode
 
 Set the pool mode to be used for all connections from this user. If not
-set, the database or default pool\_mode is used.
+set, the database or default pool_mode is used.
 
-INCLUDE DIRECTIVE
+Include directive
 -----------------
 
 The PgBouncer config file can contain include directives, which specify
 another config file to read and process. This allows for splitting the
-configuration file into physically separate parts. The include directives look
-like this:
+configuration file into physically separate parts. The include
+directives look like this:
 
     %include filename
 
 If the file name is not absolute path it is taken as relative to current
 working directory.
 
-AUTHENTICATION FILE FORMAT
+Authentication file format
 --------------------------
 
 PgBouncer needs its own user database. The users are loaded from a text
@@ -692,10 +857,31 @@ PostgreSQL MD5-hidden password format:
 So user `admin` with password `1234` will have MD5-hidden password
 `md545f2603610af569b6155c45067268c6b`.
 
-EXAMPLE
+HBA file format
+---------------
+
+It follows the format of PostgreSQL pg_hba.conf file:
+[http://www.postgresql.org/docs/9.4/static/auth-pg-hba-conf.html](http://www.postgresql.org/docs/9.4/static/auth-pg-hba-conf.html)
+
+There are following differences:
+
+-   Supported record types: `local`, `host`, `hostssl`,
+    `hostnossl`.
+-   Database field: Supports `all`, `sameuser`, `@file`, multiple
+    names. Not supported: `replication`, `samerole`, `samegroup`.
+-   Username field: Supports `all`, `@file`, multiple names. Not
+    supported: `+groupname`.
+-   Address field: Supported IPv4, IPv6. Not supported: DNS names,
+    domain prefixes.
+-   Auth-method field: Supported methods: `trust`, `reject`,
+    `md5`, `password`, `peer`, `cert`. Not supported: `gss`,
+    `sspi`, `ident`, `ldap`, `radius`, `pam`. Also username
+    map (`map=`) parameter is not supported.
+
+Example
 -------
 
-### Minimal config
+Minimal config:
 
     [databases]
     template1 = host=127.0.0.1 dbname=template1 auth_user=someuser
@@ -711,7 +897,7 @@ EXAMPLE
     admin_users = someuser
     stats_users = stat_collector
 
-### Database defaults
+Database defaults:
 
     [databases]
 
@@ -724,10 +910,11 @@ EXAMPLE
     ; access to destination database will go with single user
     forcedb = host=127.0.0.1 port=300 user=baz password=foo client_encoding=UNICODE datestyle=ISO
 
-SEE ALSO
+See also
 --------
 
+[https://pgbouncer.github.io](https://pgbouncer.github.io)/
+
+[https://wiki.postgresql.org/wiki/PgBouncer](https://wiki.postgresql.org/wiki/PgBouncer)
+
 pgbouncer(1) - manpage for general usage, console commands.
-
-[http://wiki.postgresql.org/wiki/PgBouncer](http://wiki.postgresql.org/wiki/PgBouncer)
-
