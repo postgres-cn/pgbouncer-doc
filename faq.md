@@ -14,7 +14,7 @@ PgBouncer port.
 
 1.  Use a TCP connection load-balancer. Either
     [LVS](http://www.linuxvirtualserver.org/) or
-    [HAProxy](http://haproxy.1wt.eu/) seem to be good choices. On
+    [HAProxy](http://www.haproxy.org/) seem to be good choices. On
     PgBouncer side it may be good idea to make `server_lifetime` smaller
     and also turn `server_round_robin` on - by default idle connections
     are reused by LIFO algorithm which may work not so well when
@@ -38,37 +38,8 @@ protocol support is not needed.
 ## How to use prepared statements with session pooling?
 
 In session pooling mode, the reset query must clean old prepared
-statements.
-
-### Cleaning prepared statements on PostgreSQL 8.3 and newer
-
-This is easy - just set `server_reset_query = DISCARD ALL;` or at least
-to `DEALLOCATE ALL;`
-
-### Cleaning prepared statements on PostgreSQL 8.2 and older
-
-This is problematic as older versions of PostgreSQL do not allow easy
-way to drop prepared statements. Luckily there is system view that shows
-prepared plans in current session. So as a workaround following function
-can be created:
-
-    CREATE OR REPLACE FUNCTION deallocate_all()
-    RETURNS void AS $$
-    DECLARE
-        sql record;
-    BEGIN
-        FOR sql IN
-            SELECT 'deallocate ' || quote_ident(name) as stmt
-              FROM pg_catalog.pg_prepared_statements
-        LOOP
-            EXECUTE sql.stmt;
-        END LOOP;
-    END;
-    $$ LANGUAGE plpgsql;
-
-Then the `server_reset_query` can be set to call it:
-
-    server_reset_query = RESET ALL; SET SESSION AUTHORIZATION DEFAULT; SELECT deallocate_all();
+statements.  This can be achieved by `server_reset_query = DISCARD ALL;`
+or at least to `DEALLOCATE ALL;`
 
 ## How to use prepared statements with transaction pooling?
 
@@ -84,7 +55,7 @@ parameter to connect string. But current JDBC code ignores the setting
 for BEGIN/COMMIT/ROLLBACK statements and still tries to cache their
 plans. This can be fixed with following patch:
 
-[http://treehou.se/\~omar/postgresql-jdbc-8.4-701-pgbouncer\_txn.patch](http://treehou.se/~omar/postgresql-jdbc-8.4-701-pgbouncer_txn.patch)
+[http://treehou.se/~omar/postgresql-jdbc-8.4-701-pgbouncer_txn.patch](http://treehou.se/~omar/postgresql-jdbc-8.4-701-pgbouncer_txn.patch)
 
 described here:
 
@@ -123,7 +94,7 @@ transports actual file descriptors to new process.
 If the takeover does not work for whatever reason, the new process can
 be simply killed, old one notices this and resumes work.
 
-## What should my server\_reset\_query be?
+## What should my server_reset_query be?
 
 This depends on pool mode. But in any case there is no need to put
 `ROLLBACK;` into it, as PgBouncer never re-uses connections where
@@ -161,34 +132,33 @@ Use SHOW CLIENTS and SHOW SERVERS views on console.
 
 ### Overview of important fields in SHOW CLIENTS
 
-`addr + port`
-	unique port on client host
+addr, port
+: source address of client connection
 
-`local_addr + local_port`
-	pgbouncer port
+local_addr, local_port
+: local endpoint of client connection
 
-`ptr`
-	unique id for this connection
+ptr
+: unique id for this connection
 
-`link`
-	unique id for server connection this is currently linked to
+link
+: unique id for server connection this client connection is currently linked to
 
 ### Overview of important fields in SHOW SERVERS
 
-`addr + port`
-   server port this connects to
+addr, port
+: server address pgbouncer connects to
 
-`local_addr + local_port`
-   unique port on pgbouncer host
+local_addr, local_port
+: connections local endpoint
 
-`ptr`
-   unique id for this connection
+ptr
+: unique id for this connection
 
-`link`
-   unique id for client connection this is currently linked to
+link
+: unique id for client connection this server connection is currently linked to
 
-Should PgBouncer be installed on webserver or database server?
---------------------------------------------------------------
+## Should PgBouncer be installed on webserver or database server?
 
 It depends. Installing on webserver is good when short-connections are
 used, then the connection setup latency is minimised - TCP requires
