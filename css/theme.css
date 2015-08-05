@@ -70,22 +70,15 @@ body {
     transform: none;
 }
 
-/* make definition lists single line */
 dt {
-    font-weight: normal;
-    float: left;
-    clear: left;
-    padding-right: .2em;
+    padding: 0 0 0 20px;
 }
 
 dt:after {
     content: ': ';
 }
 
-dt, dd {
-    min-height: 1.5em;
-}
-
 dd {
     margin: 0px 0px 10px;
+    padding: 0 0 0 40px;
 }
