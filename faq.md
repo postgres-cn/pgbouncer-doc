@@ -28,7 +28,7 @@ PgBouncer port.
 
 ## How to use SSL connections with PgBouncer?
 
-Use [Stunnel](http://www.stunnel.org/). Since version 4.27 it supports
+Use [Stunnel](https://www.stunnel.org/). Since version 4.27 it supports
 PostgreSQL protocol for both client and server side. It is activated by
 setting `protocol=pgsql`.
 
