@@ -99,33 +99,33 @@ Default: not set
 
 How to authenticate users.
 
-`hba`
+hba
 :   Actual auth type is loaded from [auth_hba_file](#auth_hba_file). This allows
     different authentication methods different access paths. Example:
     connection over unix socket use `peer` auth method, connection over
     TCP must use TLS.
 
-`cert`
+cert
 :   Client must connect over TLS connection with valid client cert.
     Username is then taken from CommonName field from certificate.
 
-`md5`
+md5
 :   Use MD5-based password check. [auth_file](#auth_file) may contain both
     MD5-encrypted or plain-text passwords. This is the default
     authentication method.
 
-`crypt`
+crypt
 :   Use crypt(3) based password check. [auth_file](#auth_file) must contain
     plain-text passwords. Deprecated, removed in PostgreSQL 8.4.
 
-`plain`
+plain
 :   Clear-text password is sent over wire. Deprecated.
 
-`trust`
+trust
 :   No authentication is done. Username must still exist in
     [auth_file](#auth_file).
 
-`any`
+any
 :   Like the `trust` method, but the username given is ignored. Requires
     that all databases are configured to log in as specific user.
     Additionally, the console database allows any user to log in as
@@ -141,13 +141,13 @@ Default: `SELECT usename, passwd FROM pg_shadow WHERE usename=$1`
 
 Specifies when a server connection can be reused by other clients.
 
-`session`
+session
 :   Server is released back to pool after client disconnects. Default.
 
-`transaction`
+transaction
 :   Server is released back to pool after transaction finishes.
 
-`statement`
+statement
 :   Server is released back to pool after query finishes. Long
     transactions spanning multiple statements are disallowed in this
     mode.
@@ -481,24 +481,24 @@ disabled by default. When enabled, [client_tls_key_file](#client_tls_key_file) a
 [client_tls_cert_file](#client_tls_cert_file) must be also configured to set up key and
 cert PgBouncer uses to accept client connections.
 
-`disabled`
+disabled
 :   Plain TCP. If client requests TLS, it's ignored. Default.
 
-`allow`
+allow
 :   If client requests TLS, it is used. If not, plain TCP is used. If
     client uses client-certificate, it is not validated.
 
-`prefer`
+prefer
 :   Same as `allow`.
 
-`require`
+require
 :   Client must use TLS. If not, client connection is rejected. If
     client uses client-certificate, it is not validated.
 
-`verify-ca`
+verify-ca
 :   Client must use TLS with valid client certificate.
 
-`verify-full`
+verify-full
 :   Same as `verify-ca`.
 
 ### client_tls_key_file
@@ -554,27 +554,27 @@ Default: `auto`
 TLS mode to use for connections to PostgreSQL servers. TLS connections
 are disabled by default.
 
-`disabled`
+disabled
 :   Plain TCP. TCP is not event requested from server. Default.
 
-`allow`
+allow
 :   FIXME: if server rejects plain, try TLS?
 
-`prefer`
+prefer
 :   TLS connection is always requested first from PostgreSQL, when
     refused connection will be establised over plain TCP. Server
     certificate is not validated.
 
-`require`
+require
 :   Connection must go over TLS. If server rejects it, plain TCP is not
     attempted. Server certificate is not validated.
 
-`verify-ca`
+verify-ca
 :   Connection must go over TLS and server certificate must be valid
     according to [server_tls_ca_file](#server_tls_ca_file). Server hostname is not
     checked against certificate.
 
-`verify-full`
+verify-full
 :   Connection must go over TLS and server certificate must be valid
     according to [server_tls_ca_file](#server_tls_ca_file). Server hostname must match
     certificate info.
@@ -747,7 +747,7 @@ Default: same as client-side database name.
 ### host
 
 Hostname or IP address to connect to. Hostnames are resolved on connect
-time, the result is cached per +dns_max_ttl+ parameter. If DNS returns
+time, the result is cached per `dns_max_ttl` parameter. If DNS returns
 several results, they are used in round-robin manner.
 
 Default: not set, meaning to use a Unix socket.
@@ -758,7 +758,7 @@ Default: 5432
 
 ### user, password
 
-If +user=+ is set, all connections to the destination database will be
+If `user=` is set, all connections to the destination database will be
 done with the specified user, meaning that there will be only one pool
 for this database.
 
@@ -767,7 +767,7 @@ client username, meaning that there will be one pool per user.
 
 ### auth_user
 
-If +auth_user+ is set, any user not specified in auth_file will be
+If `auth_user` is set, any user not specified in auth_file will be
 queried from pg_shadow in the database using auth_user. Auth_user's
 password will be taken from auth_file.
 
@@ -794,7 +794,7 @@ will not have more than this many server connections).
 
 ### client_encoding
 
-Ask specific +client_encoding+ from server.
+Ask specific `client_encoding` from server.
 
 ### datestyle
 
@@ -860,8 +860,8 @@ So user `admin` with password `1234` will have MD5-hidden password
 HBA file format
 ---------------
 
-It follows the format of PostgreSQL pg_hba.conf file:
-[http://www.postgresql.org/docs/9.4/static/auth-pg-hba-conf.html](http://www.postgresql.org/docs/9.4/static/auth-pg-hba-conf.html)
+It follows the format of PostgreSQL pg_hba.conf file
+-[http://www.postgresql.org/docs/9.4/static/auth-pg-hba-conf.html](http://www.postgresql.org/docs/9.4/static/auth-pg-hba-conf.html)
 
 There are following differences:
 
