@@ -9,6 +9,7 @@ import sys, re
 def fixlink(m):
     txt = m.group(1)
     ref = txt.lower().replace(' ', '-')
+    ref = ref.replace('_', '')
     return '[%s](#%s)' % (txt, ref)
 
 for fn in sys.argv[1:]:

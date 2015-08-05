@@ -91,7 +91,7 @@ Default: not set.
 
 ### auth_hba_file
 
-HBA configuration file to use when [auth_type](#auth_type) is `hba`.
+HBA configuration file to use when [auth_type](#authtype) is `hba`.
 
 Default: not set
 
@@ -100,7 +100,7 @@ Default: not set
 How to authenticate users.
 
 hba
-:   Actual auth type is loaded from [auth_hba_file](#auth_hba_file). This allows
+:   Actual auth type is loaded from [auth_hba_file](#authhbafile). This allows
     different authentication methods different access paths. Example:
     connection over unix socket use `peer` auth method, connection over
     TCP must use TLS.
@@ -110,12 +110,12 @@ cert
     Username is then taken from CommonName field from certificate.
 
 md5
-:   Use MD5-based password check. [auth_file](#auth_file) may contain both
+:   Use MD5-based password check. [auth_file](#authfile) may contain both
     MD5-encrypted or plain-text passwords. This is the default
     authentication method.
 
 crypt
-:   Use crypt(3) based password check. [auth_file](#auth_file) must contain
+:   Use crypt(3) based password check. [auth_file](#authfile) must contain
     plain-text passwords. Deprecated, removed in PostgreSQL 8.4.
 
 plain
@@ -123,7 +123,7 @@ plain
 
 trust
 :   No authentication is done. Username must still exist in
-    [auth_file](#auth_file).
+    [auth_file](#authfile).
 
 any
 :   Like the `trust` method, but the username given is ignored. Requires
@@ -284,7 +284,7 @@ Default: pgbouncer
 
 ### job_name
 
-Alias for [service_name](#service_name).
+Alias for [service_name](#servicename).
 
 Log settings
 ------------
@@ -346,7 +346,7 @@ Console access control
 ### admin_users
 
 Comma-separated list of database users that are allowed to connect and
-run all commands on console. Ignored when [auth_type](#auth_type) is `any`, in
+run all commands on console. Ignored when [auth_type](#authtype) is `any`, in
 which case any username is allowed in as admin.
 
 Default: empty
@@ -376,7 +376,7 @@ for 8.3 and above its enough to do:
 
     server_reset_query = DISCARD ALL;
 
-When transaction pooling is used, the [server_reset_query](#server_reset_query) should
+When transaction pooling is used, the [server_reset_query](#serverresetquery) should
 be empty, as clients should not use any session features. If client does
 use session features, then they will be broken as transaction pooling
 will not guarantee that next query will be run on same connection.
@@ -477,8 +477,8 @@ TLS settings
 ### client_tls_sslmode
 
 TLS mode to use for connections from clients. TLS connections are
-disabled by default. When enabled, [client_tls_key_file](#client_tls_key_file) and
-[client_tls_cert_file](#client_tls_cert_file) must be also configured to set up key and
+disabled by default. When enabled, [client_tls_key_file](#clienttlskeyfile) and
+[client_tls_cert_file](#clienttlscertfile) must be also configured to set up key and
 cert PgBouncer uses to accept client connections.
 
 disabled
@@ -571,12 +571,12 @@ require
 
 verify-ca
 :   Connection must go over TLS and server certificate must be valid
-    according to [server_tls_ca_file](#server_tls_ca_file). Server hostname is not
+    according to [server_tls_ca_file](#servertlscafile). Server hostname is not
     checked against certificate.
 
 verify-full
 :   Connection must go over TLS and server certificate must be valid
-    according to [server_tls_ca_file](#server_tls_ca_file). Server hostname must match
+    according to [server_tls_ca_file](#servertlscafile). Server hostname must match
     certificate info.
 
 ### server_tls_ca_file
@@ -677,7 +677,7 @@ Default: 128
 
 How many times to process data on one connection, before proceeding.
 Without this limit, one connection with a big resultset can stall
-PgBouncer for a long time. One loop processes one [pkt_buf](#pkt_buf) amount
+PgBouncer for a long time. One loop processes one [pkt_buf](#pktbuf) amount
 of data. 0 means no limit.
 
 Default: 5
@@ -736,7 +736,7 @@ quoting: double quotes where "" is taken as single quote.
 "*" acts as fallback database: if the exact name does not exist, its
 value is taken as connect string for requested database. Such
 automatically created database entries are cleaned up if they stay idle
-longer then the time specified in [autodb_idle_timeout](#autodb_idle_timeout) parameter.
+longer then the time specified in [autodb_idle_timeout](#autodbidletimeout) parameter.
 
 ### dbname
 
