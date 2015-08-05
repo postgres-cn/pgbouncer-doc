@@ -43,11 +43,11 @@ body {
 }
 
 .well h2 {
-	font-size: 1.2em;
+    font-size: 1.2em;
 }
 
 .well h3 {
-	font-size: 1.1em;
+    font-size: 1.1em;
 }
 
 .author {
@@ -67,5 +67,25 @@ body {
 }
 
 .navbar {
-	transform: none;
+    transform: none;
+}
+
+/* make definition lists single line */
+dt {
+    font-weight: normal;
+    float: left;
+    clear: left;
+    padding-right: .2em;
+}
+
+dt:after {
+    content: ': ';
+}
+
+dt, dd {
+    min-height: 1.5em;
+}
+
+dd {
+    margin: 0px 0px 10px;
 }
