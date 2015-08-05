@@ -37,18 +37,18 @@ In order not to compromise transaction semantics for connection pooling,
 +pgbouncer+ supports several types of pooling when rotating connections:
 
 Session pooling
-  - Most polite method. When client connects, a server connection will
+:   Most polite method. When client connects, a server connection will
     be assigned to it for the whole duration the client stays connected.
     When the client disconnects, the server connection will be put back
     into the pool. This is the default method.
 
 Transaction pooling
-  - A server connection is assigned to client only during a transaction.
+:   A server connection is assigned to client only during a transaction.
     When PgBouncer notices that transaction is over, the server
     connection will be put back into the pool.
 
 Statement pooling
-  - Most aggressive method. The server connection will be put back into
+:   Most aggressive method. The server connection will be put back into
     pool immediately after a query completes. Multi-statement
     transactions are disallowed in this mode as they would break.
 
@@ -113,12 +113,12 @@ Command line switches
 ---------------------
 
 `-d`
-  - Run in background. Without it the process will run in foreground.
+:   Run in background. Without it the process will run in foreground.
     Note: Does not work on Windows, +pgbouncer+ need to run as service
     there.
 
 `-R`
-  - Do an online restart. That means connecting to the running process,
+:   Do an online restart. That means connecting to the running process,
     loading the open sockets from it, and then using them. If there is
     no active process, boot normally. Note: Works only if OS supports
     Unix sockets and the `unix_socket_dir` is not disabled in
@@ -126,29 +126,29 @@ Command line switches
     connections, they are dropped.
 
 `-u user`
-  - Switch to the given user on startup.
+:   Switch to the given user on startup.
 
 `-v`
-  - Increase verbosity. Can be used multiple times.
+:   Increase verbosity. Can be used multiple times.
 
 `-q`
-  - Be quiet - do not log to stdout. Note this does not affect logging
+:   Be quiet - do not log to stdout. Note this does not affect logging
     verbosity, only that stdout is not to be used. For use in init.d
     scripts.
 
 `-V`
-  - Show version.
+:   Show version.
 
 `-h`
-  - Show short help.
+:   Show short help.
 
 `--regservice`
-  - Win32: Register pgbouncer to run as Windows service. The
+:   Win32: Register pgbouncer to run as Windows service. The
     +service_name+ config parameter value is used as name to register
     under.
 
 `--unregservice`
-  - Win32: Unregister Windows service.
+:   Win32: Unregister Windows service.
 
 Admin console
 -------------
@@ -175,74 +175,74 @@ The +SHOW+ commands output information. Each command is described below.
 Shows statistics.
 
 `database`
-  - Statistics are presented per database.
+:   Statistics are presented per database.
 
 `total_requests`
-  - Total number of +SQL+ requests pooled by +pgbouncer+.
+:   Total number of +SQL+ requests pooled by +pgbouncer+.
 
 `total_received`
-  - Total volume in bytes of network traffic received by +pgbouncer+.
+:   Total volume in bytes of network traffic received by +pgbouncer+.
 
 `total_sent`
-  - Total volume in bytes of network traffic sent by +pgbouncer+.
+:   Total volume in bytes of network traffic sent by +pgbouncer+.
 
 `total_query_time`
-  - Total number of microseconds spent by +pgbouncer+ when actively
+:   Total number of microseconds spent by +pgbouncer+ when actively
     connected to PostgreSQL.
 
 `avg_req`
-  - Average requests per second in last stat period.
+:   Average requests per second in last stat period.
 
 `avg_recv`
-  - Average received (from clients) bytes per second.
+:   Average received (from clients) bytes per second.
 
 `avg_sent`
-  - Average sent (to clients) bytes per second.
+:   Average sent (to clients) bytes per second.
 
 `avg_query`
-  - Average query duration in microseconds.
+:   Average query duration in microseconds.
 
 #### SHOW SERVERS;
 
 `type`
-  - S, for server.
+:   S, for server.
 
 `user`
-  - Username +pgbouncer+ uses to connect to server.
+:   Username +pgbouncer+ uses to connect to server.
 
 `database`
-  - Database name.
+:   Database name.
 
 `state`
-  - State of the pgbouncer server connection, one of +active+, +used+ or
+:   State of the pgbouncer server connection, one of +active+, +used+ or
     +idle+.
 
 `addr`
-  - IP address of PostgreSQL server.
+:   IP address of PostgreSQL server.
 
 `port`
-  - Port of PostgreSQL server.
+:   Port of PostgreSQL server.
 
 `local_addr`
-  - Connection start address on local machine.
+:   Connection start address on local machine.
 
 `local_port`
-  - Connection start port on local machine.
+:   Connection start port on local machine.
 
 `connect_time`
-  - When the connection was made.
+:   When the connection was made.
 
 `request_time`
-  - When last request was issued.
+:   When last request was issued.
 
 `ptr`
-  - Address of internal object for this connection. Used as unique ID.
+:   Address of internal object for this connection. Used as unique ID.
 
 `link`
-  - Address of client connection the server is paired with.
+:   Address of client connection the server is paired with.
 
 `remote_pid`
-  - Pid of backend server process. In case connection is made over unix
+:   Pid of backend server process. In case connection is made over unix
     socket and OS supports getting process ID info, it's OS pid.
     Otherwise it's extracted from cancel packet server sent, which
     should be PID in case server is Postgres, but it's a random number
@@ -251,44 +251,44 @@ Shows statistics.
 #### SHOW CLIENTS;
 
 `type`
-  - C, for client.
+:   C, for client.
 
 `user`
-  - Client connected user.
+:   Client connected user.
 
 `database`
-  - Database name.
+:   Database name.
 
 `state`
-  - State of the client connection, one of +active+, +used+, +waiting+
+:   State of the client connection, one of +active+, +used+, +waiting+
     or +idle+.
 
 `addr`
-  - IP address of client.
+:   IP address of client.
 
 `port`
-  - Port client is connected to.
+:   Port client is connected to.
 
 `local_addr`
-  - Connection end address on local machine.
+:   Connection end address on local machine.
 
 `local_port`
-  - Connection end port on local machine.
+:   Connection end port on local machine.
 
 `connect_time`
-  - Timestamp of connect time.
+:   Timestamp of connect time.
 
 `request_time`
-  - Timestamp of latest client request.
+:   Timestamp of latest client request.
 
 `ptr`
-  - Address of internal object for this connection. Used as unique ID.
+:   Address of internal object for this connection. Used as unique ID.
 
 `link`
-  - Address of server connection the client is paired with.
+:   Address of server connection the client is paired with.
 
 `remote_pid`
-  - Process ID, in case client connects over UNIX socket and OS supports
+:   Process ID, in case client connects over UNIX socket and OS supports
     getting it.
 
 #### SHOW POOLS;
@@ -296,108 +296,108 @@ Shows statistics.
 A new pool entry is made for each couple of (database, user).
 
 `database`
-  - Database name.
+:   Database name.
 
 `user`
-  - User name.
+:   User name.
 
 `cl_active`
-  - Client connections that are linked to server connection and can
+:   Client connections that are linked to server connection and can
     process queries.
 
 `cl_waiting`
-  - Client connections have sent queries but have not yet got a server
+:   Client connections have sent queries but have not yet got a server
     connection.
 
 `sv_active`
-  - Server connections that linked to client.
+:   Server connections that linked to client.
 
 `sv_idle`
-  - Server connections that unused and immediately usable for client
+:   Server connections that unused and immediately usable for client
     queries.
 
 `sv_used`
-  - Server connections that have been idle more than
+:   Server connections that have been idle more than
     `server_check_delay`, so they needs `server_check_query` to
     run on it before it can be used.
 
 `sv_tested`
-  - Server connections that are currently running either
+:   Server connections that are currently running either
     `server_reset_query` or `server_check_query`.
 
 `sv_login`
-  - Server connections currently in logging in process.
+:   Server connections currently in logging in process.
 
 `maxwait`
-  - How long the first (oldest) client in queue has waited, in seconds.
+:   How long the first (oldest) client in queue has waited, in seconds.
     If this starts increasing, then the current pool of servers does not
     handle requests quick enough. Reason may be either overloaded server
     or just too small of a +pool_size+ setting.
 
 `pool_mode`
-  - The pooling mode in use.
+:   The pooling mode in use.
 
 #### SHOW LISTS;
 
 Show following internal information, in columns (not rows):
 
 `databases`
-  - Count of databases.
+:   Count of databases.
 
 `users`
-  - Count of users.
+:   Count of users.
 
 `pools`
-  - Count of pools.
+:   Count of pools.
 
 `free_clients`
-  - Count of free clients.
+:   Count of free clients.
 
 `used_clients`
-  - Count of used clients.
+:   Count of used clients.
 
 `login_clients`
-  - Count of clients in +login+ state.
+:   Count of clients in +login+ state.
 
 `free_servers`
-  - Count of free servers.
+:   Count of free servers.
 
 `used_servers`
-  - Count of used servers.
+:   Count of used servers.
 
 #### SHOW USERS;
 
 `name`
-  - The user name
+:   The user name
 
 `pool_mode`
-  - The user's override pool_mode, or NULL if the default will be used
+:   The user's override pool_mode, or NULL if the default will be used
     instead.
 
 #### SHOW DATABASES;
 
 `name`
-  - Name of configured database entry.
+:   Name of configured database entry.
 
 `host`
-  - Host pgbouncer connects to.
+:   Host pgbouncer connects to.
 
 `port`
-  - Port pgbouncer connects to.
+:   Port pgbouncer connects to.
 
 `database`
-  - Actual database name pgbouncer connects to.
+:   Actual database name pgbouncer connects to.
 
 `force_user`
-  - When user is part of the connection string, the connection between
+:   When user is part of the connection string, the connection between
     pgbouncer and PostgreSQL is forced to the given user, whatever the
     client user.
 
 `pool_size`
-  - Maximum number of server connections.
+:   Maximum number of server connections.
 
 `pool_mode`
-  - The database's override pool_mode, or NULL if the default will be
+:   The database's override pool_mode, or NULL if the default will be
     used instead.
 
 #### SHOW FDS;
@@ -414,29 +414,29 @@ This command also blocks internal event loop, so it should not be used
 while PgBouncer is in use.
 
 `fd`
-  - File descriptor numeric value.
+:   File descriptor numeric value.
 
 `task`
-  - One of +pooler+, +client+ or +server+.
+:   One of +pooler+, +client+ or +server+.
 
 `user`
-  - User of the connection using the FD.
+:   User of the connection using the FD.
 
 `database`
-  - Database of the connection using the FD.
+:   Database of the connection using the FD.
 
 `addr`
-  - IP address of the connection using the FD, +unix+ if a unix socket
+:   IP address of the connection using the FD, +unix+ if a unix socket
     is used.
 
 `port`
-  - Port used by the connection using the FD.
+:   Port used by the connection using the FD.
 
 `cancel`
-  - Cancel key for this connection.
+:   Cancel key for this connection.
 
 `link`
-  - fd for corresponding server/client. NULL if idle.
+:   fd for corresponding server/client. NULL if idle.
 
 #### SHOW CONFIG;
 
@@ -444,13 +444,13 @@ Show the current configuration settings, one per row, with following
 columns:
 
 `key`
-  - Configuration variable name
+:   Configuration variable name
 
 `value`
-  - Configuration value
+:   Configuration value
 
 `changeable`
-  - Either +yes+ or +no+, shows if the variable can be changed while
+:   Either +yes+ or +no+, shows if the variable can be changed while
     running. If +no+, the variable can be changed only boot-time.
 
 #### SHOW DNS_HOSTS;
@@ -458,26 +458,26 @@ columns:
 Show hostnames in DNS cache.
 
 `hostname`
-  - Host name.
+:   Host name.
 
 `ttl`
-  - How meny seconds until next lookup.
+:   How meny seconds until next lookup.
 
 `addrs`
-  - Comma separated list of addresses.
+:   Comma separated list of addresses.
 
 #### SHOW DNS_ZONES
 
 Show DNS zones in cache.
 
 `zonename`
-  - Zone name.
+:   Zone name.
 
 `serial`
-  - Current serial.
+:   Current serial.
 
 `count`
-  - Hostnames belonging to this zone.
+:   Hostnames belonging to this zone.
 
 ### Process controlling commands
 
@@ -523,13 +523,13 @@ changeable settings.
 ### Signals
 
 `SIGHUP`
-  - Reload config. Same as issuing command +RELOAD;+ on console.
+:   Reload config. Same as issuing command +RELOAD;+ on console.
 
 `SIGINT`
-  - Safe shutdown. Same as issuing +PAUSE;+ and +SHUTDOWN;+ on console.
+:   Safe shutdown. Same as issuing +PAUSE;+ and +SHUTDOWN;+ on console.
 
 `SIGTERM`
-  - Immediate shutdown. Same as issuing +SHUTDOWN;+ on console.
+:   Immediate shutdown. Same as issuing +SHUTDOWN;+ on console.
 
 ### Libevent settings
 

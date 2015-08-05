@@ -100,33 +100,33 @@ Default: not set
 How to authenticate users.
 
 `hba`
-  - Actual auth type is loaded from [auth_hba_file](#auth_hba_file). This allows
+:   Actual auth type is loaded from [auth_hba_file](#auth_hba_file). This allows
     different authentication methods different access paths. Example:
     connection over unix socket use `peer` auth method, connection over
     TCP must use TLS.
 
 `cert`
-  - Client must connect over TLS connection with valid client cert.
+:   Client must connect over TLS connection with valid client cert.
     Username is then taken from CommonName field from certificate.
 
 `md5`
-  - Use MD5-based password check. [auth_file](#auth_file) may contain both
+:   Use MD5-based password check. [auth_file](#auth_file) may contain both
     MD5-encrypted or plain-text passwords. This is the default
     authentication method.
 
 `crypt`
-  - Use crypt(3) based password check. [auth_file](#auth_file) must contain
+:   Use crypt(3) based password check. [auth_file](#auth_file) must contain
     plain-text passwords. Deprecated, removed in PostgreSQL 8.4.
 
 `plain`
-  - Clear-text password is sent over wire. Deprecated.
+:   Clear-text password is sent over wire. Deprecated.
 
 `trust`
-  - No authentication is done. Username must still exist in
+:   No authentication is done. Username must still exist in
     [auth_file](#auth_file).
 
 `any`
-  - Like the `trust` method, but the username given is ignored. Requires
+:   Like the `trust` method, but the username given is ignored. Requires
     that all databases are configured to log in as specific user.
     Additionally, the console database allows any user to log in as
     admin.
@@ -142,13 +142,13 @@ Default: `SELECT usename, passwd FROM pg_shadow WHERE usename=$1`
 Specifies when a server connection can be reused by other clients.
 
 `session`
-  - Server is released back to pool after client disconnects. Default.
+:   Server is released back to pool after client disconnects. Default.
 
 `transaction`
-  - Server is released back to pool after transaction finishes.
+:   Server is released back to pool after transaction finishes.
 
 `statement`
-  - Server is released back to pool after query finishes. Long
+:   Server is released back to pool after query finishes. Long
     transactions spanning multiple statements are disallowed in this
     mode.
 
@@ -482,24 +482,24 @@ disabled by default. When enabled, [client_tls_key_file](#client_tls_key_file) a
 cert PgBouncer uses to accept client connections.
 
 `disabled`
-  - Plain TCP. If client requests TLS, it's ignored. Default.
+:   Plain TCP. If client requests TLS, it's ignored. Default.
 
 `allow`
-  - If client requests TLS, it is used. If not, plain TCP is used. If
+:   If client requests TLS, it is used. If not, plain TCP is used. If
     client uses client-certificate, it is not validated.
 
 `prefer`
-  - Same as `allow`.
+:   Same as `allow`.
 
 `require`
-  - Client must use TLS. If not, client connection is rejected. If
+:   Client must use TLS. If not, client connection is rejected. If
     client uses client-certificate, it is not validated.
 
 `verify-ca`
-  - Client must use TLS with valid client certificate.
+:   Client must use TLS with valid client certificate.
 
 `verify-full`
-  - Same as `verify-ca`.
+:   Same as `verify-ca`.
 
 ### client_tls_key_file
 
@@ -555,27 +555,27 @@ TLS mode to use for connections to PostgreSQL servers. TLS connections
 are disabled by default.
 
 `disabled`
-  - Plain TCP. TCP is not event requested from server. Default.
+:   Plain TCP. TCP is not event requested from server. Default.
 
 `allow`
-  - FIXME: if server rejects plain, try TLS?
+:   FIXME: if server rejects plain, try TLS?
 
 `prefer`
-  - TLS connection is always requested first from PostgreSQL, when
+:   TLS connection is always requested first from PostgreSQL, when
     refused connection will be establised over plain TCP. Server
     certificate is not validated.
 
 `require`
-  - Connection must go over TLS. If server rejects it, plain TCP is not
+:   Connection must go over TLS. If server rejects it, plain TCP is not
     attempted. Server certificate is not validated.
 
 `verify-ca`
-  - Connection must go over TLS and server certificate must be valid
+:   Connection must go over TLS and server certificate must be valid
     according to [server_tls_ca_file](#server_tls_ca_file). Server hostname is not
     checked against certificate.
 
 `verify-full`
-  - Connection must go over TLS and server certificate must be valid
+:   Connection must go over TLS and server certificate must be valid
     according to [server_tls_ca_file](#server_tls_ca_file). Server hostname must match
     certificate info.
 

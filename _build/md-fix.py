@@ -16,7 +16,7 @@ for fn in sys.argv[1:]:
 
 for ln in sys.stdin:
     ln = ln.replace('\\', '')               # pandoc is overeager with \
-    ln = ln.replace('~', '-')               # '-' looks better than '~'
+    ln = re.sub(r'^  [~]', ':  ', ln)       # use def list
     ln = re.sub(r'`([^`]+)`_', fixlink, ln) # fix local links
     sys.stdout.write(ln)
 
