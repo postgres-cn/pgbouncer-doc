@@ -59,7 +59,7 @@ body {
 }
 
 /* Hack to get around the menubar having position: fixed; */
-.clickable-header:before {
+h1[id]:before, h2[id]:before, h3[id]:before {
     content: "";
     display: block;
     height: 60px;
