@@ -71,11 +71,11 @@ body {
 }
 
 dt {
-    padding: 0 0 0 20px;
+    padding: 0 0 0 16px;
 }
 
 dt:after {
-    content: ': ';
+    content: ':';
 }
 
 dd {
