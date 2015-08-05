@@ -164,7 +164,7 @@ Use SHOW CLIENTS and SHOW SERVERS views on console.
 `addr + port`
 	unique port on client host
 
-`local\_addr + local\_port`
+`local_addr + local_port`
 	pgbouncer port
 
 `ptr`
@@ -178,7 +178,7 @@ Use SHOW CLIENTS and SHOW SERVERS views on console.
 `addr + port`
    server port this connects to
 
-`local\_addr + local\_port`
+`local_addr + local_port`
    unique port on pgbouncer host
 
 `ptr`
