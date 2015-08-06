@@ -82,3 +82,11 @@ dd {
     margin: 0px 0px 10px;
     padding: 0 0 0 40px;
 }
+
+table, td, th {
+    border: 1px solid black;
+}
+
+th, td {
+	padding: 3px 7px 3px 7px;
+}
