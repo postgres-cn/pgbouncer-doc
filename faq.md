@@ -12,7 +12,16 @@ PgBouncer port.
 
 ## How to load-balance queries between several servers?
 
-1.  Use a TCP connection load-balancer. Either
+PgBouncer does not have internal multi-host configuration.
+It is possible via some external tools:
+
+1.  DNS round-robin. Use several IPs behind one DNS name. PgBouncer does
+    not look up DNS each time new connection is launched. Instead it
+    caches all IPs and does round-robin internally. Note: if there is
+    more than 8 IPs behind one name, the DNS backend must support EDNS0
+    protocol. See README for details.
+
+2.  Use a TCP connection load-balancer. Either
     [LVS](http://www.linuxvirtualserver.org/) or
     [HAProxy](http://www.haproxy.org/) seem to be good choices. On
     PgBouncer side it may be good idea to make `server_lifetime` smaller
@@ -20,13 +29,25 @@ PgBouncer port.
     are reused by LIFO algorithm which may work not so well when
     load-balancing is needed.
 
-2.  DNS round-robin. Use several IPs behind one DNS name. PgBouncer does
-    not look up DNS each time new connection is launched. Instead it
-    caches all IPs and does round-robin internally. Note: if there is
-    more than 8 IPs behind one name, the DNS backend must support EDNS0
-    protocol. See README for details.
+## How to failover
+
+PgBouncer does not have internal failover-host configuration nor detection.
+It is possible via some external tools:
+
+1. DNS reconfiguration - when ip behind DNS name is reconfigured, pgbouncer
+   will reconnect to new server.  This behaviour can be tuned via 2
+   config parameters - **dns_max_ttl** tunes lifetime for one hostname,
+   and **dns_zone_check_period** tunes how often zone SOA will be
+   queried for changes.  If zone SOA record has changed, pgbouncer
+   will re-query all hostnames under that zone.
+
+2. Write new host to config and let PgBouncer reload it - send SIGHUP
+   or use RELOAD; command on console.  PgBouncer will detect changed
+   host config and reconnect to new server.
 
 ## How to use SSL connections with PgBouncer?
+
+[ TLS support will be in next version of PgBouncer. Build from GIT to get it. ]
 
 Use [Stunnel](https://www.stunnel.org/). Since version 4.27 it supports
 PostgreSQL protocol for both client and server side. It is activated by
@@ -51,15 +72,7 @@ client.
 ### Disabling prepared statements in JDBC
 
 The proper way to do it for JDBC is adding `prepareThreshold=0`
-parameter to connect string. But current JDBC code ignores the setting
-for BEGIN/COMMIT/ROLLBACK statements and still tries to cache their
-plans. This can be fixed with following patch:
-
-[http://treehou.se/~omar/postgresql-jdbc-8.4-701-pgbouncer_txn.patch](http://treehou.se/~omar/postgresql-jdbc-8.4-701-pgbouncer_txn.patch)
-
-described here:
-
-[http://pgfoundry.org/pipermail/pgbouncer-general/2010-February/000507.html](http://pgfoundry.org/pipermail/pgbouncer-general/2010-February/000507.html)
+parameter to connect string.
 
 ### Disabling prepared statements in PHP/PDO
 
