@@ -3,7 +3,7 @@ layout: default
 title: Support
 ---
 
-## Articles
+## Tutorials
 
 - [First steps with pgbouncer, how to set and run it.](http://michael.otacoo.com/postgresql-2/first-steps-with-pgbouncer-how-to-set-and-run-it/)
 
@@ -21,7 +21,7 @@ title: Support
 
   Discusses diffenrences between pooling modes.
 
-## Support
+## Community
 
 - [Issue tracker](https://github.com/pgbouncer/pgbouncer/issues)
 
