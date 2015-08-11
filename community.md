@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Support
+title: Community
 ---
 
 ## Tutorials
@@ -21,7 +21,7 @@ title: Support
 
   Discusses diffenrences between pooling modes.
 
-## Community
+## Support
 
 - [Issue tracker](https://github.com/pgbouncer/pgbouncer/issues)
 
