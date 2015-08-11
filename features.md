@@ -1,13 +1,9 @@
 ---
-layout: toc
-title: PgBouncer overview
+layout: default
+title: PgBouncer features
 ---
 
-# PgBouncer overview
-
-Lightweight connection pooler for PostgreSQL.
-
-## Features
+# Features
 
 -   Several levels of brutality when rotating connections:
 

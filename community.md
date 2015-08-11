@@ -23,9 +23,11 @@ title: Community
 
 ## Support
 
-- [Issue tracker](https://github.com/pgbouncer/pgbouncer/issues)
+- [Project page](https://github.com/pgbouncer/pgbouncer) at Github.
 
-- [Mailing-list](http://lists.pgfoundry.org/mailman/listinfo/pgbouncer-general)
+- [Issue tracker](https://github.com/pgbouncer/pgbouncer/issues) at Github.
 
-- PgBouncer section at [StackOverflow](https://stackoverflow.com/questions/tagged/pgbouncer).
+- [Mailing-list](http://lists.pgfoundry.org/mailman/listinfo/pgbouncer-general) at PgFoundry.
+
+- [PgBouncer section](https://stackoverflow.com/questions/tagged/pgbouncer) at StackOverflow.
 
