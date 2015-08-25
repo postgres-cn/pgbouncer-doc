@@ -1,0 +1,25 @@
+---
+layout: default
+title: PgBouncer Downloads
+---
+
+<div class="well">
+
+<h1>Source releases</h1>
+
+<table border="0">
+{% for serie_list in site.data.downloads.series %}
+<tr>
+  <th colspan="4">PgBouncer {{ serie_list[0].basever }}</th>
+</tr>
+{% for release in serie_list %}
+<tr>
+  <td><a href="{{ release.tgz_file}}">{{ release.tgz_basename }}</a></td>
+  <td>{{ release.date }}</td>
+  <td align="right">{{ release.tgz_size }} bytes</td>
+  <td><a href="{{ release.tgz_file}}.sha256">sha256</a></td>
+</tr>
+{% endfor %}
+{% endfor %}
+</table>
+</div>

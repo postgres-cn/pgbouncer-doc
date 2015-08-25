@@ -1,0 +1,266 @@
+{
+  "series": [
+    [
+      {
+        "basever": "1.6", 
+        "date": "2015-08-01", 
+        "tgz_basename": "pgbouncer-1.6.tar.gz", 
+        "tgz_file": "files/1.6/pgbouncer-1.6.tar.gz", 
+        "tgz_size": 412700, 
+        "version": "1.6"
+      }
+    ], 
+    [
+      {
+        "basever": "1.5", 
+        "date": "2015-04-09", 
+        "tgz_basename": "pgbouncer-1.5.5.tar.gz", 
+        "tgz_file": "files/1.5.5/pgbouncer-1.5.5.tar.gz", 
+        "tgz_size": 336145, 
+        "version": "1.5.5"
+      }, 
+      {
+        "basever": "1.5", 
+        "date": "2012-11-28", 
+        "tgz_basename": "pgbouncer-1.5.4.tar.gz", 
+        "tgz_file": "files/1.5.4/pgbouncer-1.5.4.tar.gz", 
+        "tgz_size": 339610, 
+        "version": "1.5.4"
+      }, 
+      {
+        "basever": "1.5", 
+        "date": "2012-09-12", 
+        "tgz_basename": "pgbouncer-1.5.3.tar.gz", 
+        "tgz_file": "files/1.5.3/pgbouncer-1.5.3.tar.gz", 
+        "tgz_size": 339013, 
+        "version": "1.5.3"
+      }, 
+      {
+        "basever": "1.5", 
+        "date": "2012-05-29", 
+        "tgz_basename": "pgbouncer-1.5.2.tar.gz", 
+        "tgz_file": "files/1.5.2/pgbouncer-1.5.2.tar.gz", 
+        "tgz_size": 335338, 
+        "version": "1.5.2"
+      }, 
+      {
+        "basever": "1.5", 
+        "date": "2012-04-17", 
+        "tgz_basename": "pgbouncer-1.5.1.tar.gz", 
+        "tgz_file": "files/1.5.1/pgbouncer-1.5.1.tar.gz", 
+        "tgz_size": 334413, 
+        "version": "1.5.1"
+      }, 
+      {
+        "basever": "1.5", 
+        "date": "2012-01-05", 
+        "tgz_basename": "pgbouncer-1.5.tar.gz", 
+        "tgz_file": "files/1.5/pgbouncer-1.5.tar.gz", 
+        "tgz_size": 411488, 
+        "version": "1.5"
+      }
+    ], 
+    [
+      {
+        "basever": "1.4", 
+        "date": "2011-06-16", 
+        "tgz_basename": "pgbouncer-1.4.2.tgz", 
+        "tgz_file": "files/1.4.2/pgbouncer-1.4.2.tgz", 
+        "tgz_size": 283204, 
+        "version": "1.4.2"
+      }, 
+      {
+        "basever": "1.4", 
+        "date": "2011-04-01", 
+        "tgz_basename": "pgbouncer-1.4.1.tgz", 
+        "tgz_file": "files/1.4.1/pgbouncer-1.4.1.tgz", 
+        "tgz_size": 282728, 
+        "version": "1.4.1"
+      }, 
+      {
+        "basever": "1.4", 
+        "date": "2011-01-11", 
+        "tgz_basename": "pgbouncer-1.4.tgz", 
+        "tgz_file": "files/1.4/pgbouncer-1.4.tgz", 
+        "tgz_size": 231691, 
+        "version": "1.4"
+      }
+    ], 
+    [
+      {
+        "basever": "1.3", 
+        "date": "2010-09-09", 
+        "tgz_basename": "pgbouncer-1.3.4.tgz", 
+        "tgz_file": "files/1.3.4/pgbouncer-1.3.4.tgz", 
+        "tgz_size": 167957, 
+        "version": "1.3.4"
+      }, 
+      {
+        "basever": "1.3", 
+        "date": "2010-05-10", 
+        "tgz_basename": "pgbouncer-1.3.3.tgz", 
+        "tgz_file": "files/1.3.3/pgbouncer-1.3.3.tgz", 
+        "tgz_size": 167476, 
+        "version": "1.3.3"
+      }, 
+      {
+        "basever": "1.3", 
+        "date": "2010-03-15", 
+        "tgz_basename": "pgbouncer-1.3.2.tgz", 
+        "tgz_file": "files/1.3.2/pgbouncer-1.3.2.tgz", 
+        "tgz_size": 166756, 
+        "version": "1.3.2"
+      }, 
+      {
+        "basever": "1.3", 
+        "date": "2009-07-06", 
+        "tgz_basename": "pgbouncer-1.3.1.tgz", 
+        "tgz_file": "files/1.3.1/pgbouncer-1.3.1.tgz", 
+        "tgz_size": 161518, 
+        "version": "1.3.1"
+      }, 
+      {
+        "basever": "1.3", 
+        "date": "2009-02-18", 
+        "tgz_basename": "pgbouncer-1.3.tgz", 
+        "tgz_file": "files/1.3/pgbouncer-1.3.tgz", 
+        "tgz_size": 160154, 
+        "version": "1.3"
+      }
+    ], 
+    [
+      {
+        "basever": "1.2", 
+        "date": "2008-08-08", 
+        "tgz_basename": "pgbouncer-1.2.3.tgz", 
+        "tgz_file": "files/1.2.3/pgbouncer-1.2.3.tgz", 
+        "tgz_size": 145372, 
+        "version": "1.2.3"
+      }, 
+      {
+        "basever": "1.2", 
+        "date": "2008-08-06", 
+        "tgz_basename": "pgbouncer-1.2.2.tgz", 
+        "tgz_file": "files/1.2.2/pgbouncer-1.2.2.tgz", 
+        "tgz_size": 145017, 
+        "version": "1.2.2"
+      }, 
+      {
+        "basever": "1.2", 
+        "date": "2008-08-04", 
+        "tgz_basename": "pgbouncer-1.2.1.tgz", 
+        "tgz_file": "files/1.2.1/pgbouncer-1.2.1.tgz", 
+        "tgz_size": 144903, 
+        "version": "1.2.1"
+      }, 
+      {
+        "basever": "1.2", 
+        "date": "2008-07-29", 
+        "tgz_basename": "pgbouncer-1.2.tgz", 
+        "tgz_file": "files/1.2/pgbouncer-1.2.tgz", 
+        "tgz_size": 143915, 
+        "version": "1.2"
+      }
+    ], 
+    [
+      {
+        "basever": "1.1", 
+        "date": "2007-12-10", 
+        "tgz_basename": "pgbouncer-1.1.2.tgz", 
+        "tgz_file": "files/1.1.2/pgbouncer-1.1.2.tgz", 
+        "tgz_size": 122054, 
+        "version": "1.1.2"
+      }, 
+      {
+        "basever": "1.1", 
+        "date": "2007-10-26", 
+        "tgz_basename": "pgbouncer-1.1.1.tgz", 
+        "tgz_file": "files/1.1.1/pgbouncer-1.1.1.tgz", 
+        "tgz_size": 121042, 
+        "version": "1.1.1"
+      }, 
+      {
+        "basever": "1.1", 
+        "date": "2007-10-09", 
+        "tgz_basename": "pgbouncer-1.1.tgz", 
+        "tgz_file": "files/1.1/pgbouncer-1.1.tgz", 
+        "tgz_size": 120462, 
+        "version": "1.1"
+      }
+    ], 
+    [
+      {
+        "basever": "1.0", 
+        "date": "2007-06-18", 
+        "tgz_basename": "pgbouncer-1.0.8.tgz", 
+        "tgz_file": "files/1.0.8/pgbouncer-1.0.8.tgz", 
+        "tgz_size": 93636, 
+        "version": "1.0.8"
+      }, 
+      {
+        "basever": "1.0", 
+        "date": "2007-04-19", 
+        "tgz_basename": "pgbouncer-1.0.7.tgz", 
+        "tgz_file": "files/1.0.7/pgbouncer-1.0.7.tgz", 
+        "tgz_size": 93086, 
+        "version": "1.0.7"
+      }, 
+      {
+        "basever": "1.0", 
+        "date": "2007-04-12", 
+        "tgz_basename": "pgbouncer-1.0.6.tgz", 
+        "tgz_file": "files/1.0.6/pgbouncer-1.0.6.tgz", 
+        "tgz_size": 92244, 
+        "version": "1.0.6"
+      }, 
+      {
+        "basever": "1.0", 
+        "date": "2007-04-11", 
+        "tgz_basename": "pgbouncer-1.0.5.tgz", 
+        "tgz_file": "files/1.0.5/pgbouncer-1.0.5.tgz", 
+        "tgz_size": 91934, 
+        "version": "1.0.5"
+      }, 
+      {
+        "basever": "1.0", 
+        "date": "2007-04-11", 
+        "tgz_basename": "pgbouncer-1.0.4.tgz", 
+        "tgz_file": "files/1.0.4/pgbouncer-1.0.4.tgz", 
+        "tgz_size": 91889, 
+        "version": "1.0.4"
+      }, 
+      {
+        "basever": "1.0", 
+        "date": "2007-04-11", 
+        "tgz_basename": "pgbouncer-1.0.3.tgz", 
+        "tgz_file": "files/1.0.3/pgbouncer-1.0.3.tgz", 
+        "tgz_size": 91489, 
+        "version": "1.0.3"
+      }, 
+      {
+        "basever": "1.0", 
+        "date": "2007-03-28", 
+        "tgz_basename": "pgbouncer-1.0.2.tgz", 
+        "tgz_file": "files/1.0.2/pgbouncer-1.0.2.tgz", 
+        "tgz_size": 90555, 
+        "version": "1.0.2"
+      }, 
+      {
+        "basever": "1.0", 
+        "date": "2007-03-15", 
+        "tgz_basename": "pgbouncer-1.0.1.tgz", 
+        "tgz_file": "files/1.0.1/pgbouncer-1.0.1.tgz", 
+        "tgz_size": 89609, 
+        "version": "1.0.1"
+      }, 
+      {
+        "basever": "1.0", 
+        "date": "2007-03-13", 
+        "tgz_basename": "pgbouncer-1.0.tgz", 
+        "tgz_file": "files/1.0/pgbouncer-1.0.tgz", 
+        "tgz_size": 88587, 
+        "version": "1.0"
+      }
+    ]
+  ]
+}

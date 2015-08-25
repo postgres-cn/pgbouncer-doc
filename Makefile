@@ -19,4 +19,10 @@ doc:
 	pandoc -f rst -t markdown < $(SRC)/NEWS.rst | $(FIX) _build/frag-changelog-web > changelog.md
 	sed -e '/^[+]/s/[+]/|/g' $(SRC)/README.rst | \
 	pandoc -f rst -t markdown | sed -e '1,/^---/d' | $(FIX) _build/frag-install-web > install.md
+	python _build/downloads.py > _data/downloads.json
+	$(SHELL) ./_build/mk-sha.sh
+
+check-sha:
+	for d in downloads/files/*.*; do cd $$d; sha256sum -c *.sha256; cd ..; done
+
 
