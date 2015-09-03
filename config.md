@@ -379,6 +379,15 @@ will not guarantee that next query will be run on same connection.
 
 Default: DISCARD ALL
 
+### server_reset_query_always
+
+Whether [server_reset_query](#serverresetquery) should be run in all pooling modes.
+When this setting is off (default), the [server_reset_query](#serverresetquery) will
+be run only in pools that are in sessions-pooling mode. Connections in
+transaction-pooling mode should not have any need for reset query.
+
+Default: 0
+
 ### server_check_delay
 
 How long to keep released connections available for immediate re-use,
@@ -625,7 +634,10 @@ query is not assigned to a server during that time, the client is
 disconnected. This is used to prevent unresponsive servers from grabbing
 up connections. [seconds]
 
-Default: 0.0 (disabled)
+It also helps when server is down or database rejects connections for
+any reason. If this is disabled, clients will be queued infinitely.
+
+Default: 120
 
 ### client_idle_timeout
 

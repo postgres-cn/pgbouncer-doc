@@ -3,6 +3,14 @@
     [
       {
         "basever": "1.6", 
+        "date": "2015-09-03", 
+        "tgz_basename": "pgbouncer-1.6.1.tar.gz", 
+        "tgz_file": "files/1.6.1/pgbouncer-1.6.1.tar.gz", 
+        "tgz_size": 431076, 
+        "version": "1.6.1"
+      }, 
+      {
+        "basever": "1.6", 
         "date": "2015-08-01", 
         "tgz_basename": "pgbouncer-1.6.tar.gz", 
         "tgz_file": "files/1.6/pgbouncer-1.6.tar.gz", 
