@@ -91,7 +91,8 @@ Default: not set.
 
 ### auth_hba_file
 
-HBA configuration file to use when [auth_type](#authtype) is `hba`.
+HBA configuration file to use when [auth_type](#authtype) is `hba`. Supported
+from version 1.7 onwards.
 
 Default: not set
 
@@ -103,7 +104,7 @@ hba
 :   Actual auth type is loaded from [auth_hba_file](#authhbafile). This allows
     different authentication methods different access paths. Example:
     connection over unix socket use `peer` auth method, connection over
-    TCP must use TLS.
+    TCP must use TLS. Supported from version 1.7 onwards.
 
 cert
 :   Client must connect over TLS connection with valid client cert.
