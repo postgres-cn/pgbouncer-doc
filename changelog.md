@@ -9,7 +9,7 @@ PgBouncer changelog
 PgBouncer 1.7.x
 ---------------
 
-**2015-xx-xx - PgBouncer 1.7 - ""**
+**2015-12-18 - PgBouncer 1.7 - "Colors Vary After Resurrection"**
 
 -   Features
 
@@ -18,22 +18,44 @@ PgBouncer 1.7.x
 
     -   Support authentication via TLS client certificate.
 
-    -   Unix sockets support "peer" auth.
+    -   Support "peer" authentication on Unix sockets.
 
-    -   HBA-style access control file. This allows to configure TLS for
-        network connections and "peer" authentication for local
-        connections.
+    -   Support Host Based Access control file, like
+        [pg_hba.conf](http://www.postgresql.org/docs/9.4/static/auth-pg-hba-conf.html)
+        in Postgres. This allows to configure TLS for network
+        connections and "peer" authentication for local connections.
 
 -   Cleanups
 
     -   Set `query_wait_timeout` to 120s by default. Current default
-        (0) causes infinite queueing, which is not useful.
+        (0) causes infinite queueing, which is not useful. That means
+        if client has pending query and has not been assigned to server
+        connection, the client connection will be dropped.
 
     -   Disable `server_reset_query_always` by default. Now reset
         query is used only in pools that are in session mode.
 
+    -   Increase pkt_buf to 4096 bytes. Improves performance with TLS.
+        The behaviour is probably load-specific, but it should be safe
+        to do as since v1.2 the packet buffers are split from
+        connections and used lazily from pool.
+
+    -   Support pipelining count expected ReadyForQuery packets. This
+        avoids releasing server too early. Fixes
+        [#52](https://github.com/pgbouncer/pgbouncer/issues/52).
+
+    -   Improved sbuf_loopcnt logic - socket is guarateed to be
+        reprocessed even if there are no event from socket. Required for
+        TLS as it has it's own buffering.
+
+    -   Adapt system tests to work with modern BSD and MacOS. (Eric
+        Radman)
+
     -   Remove **crypt** auth. It's obsolete and not supported by
         PostgreSQL since 8.4.
+
+    -   Fix plain "--with-cares" configure option - without argument it
+        was broken.
 
 PgBouncer 1.6.x
 ---------------
@@ -55,6 +77,8 @@ PgBouncer 1.6.x
     -   [SECURITY] Remove invalid assignment of `auth_user`. (#69)
         When `auth_user` is set and client asks non-existing
         username, client will log in as `auth_user`. Not good.
+
+        [CVE-2015-6817](https://access.redhat.com/security/cve/cve-2015-6817)
 
     -   Skip NoticeResponce in handle_auth_response. Otherwise verbose
         log levels on server cause login failures.
@@ -206,6 +230,8 @@ PgBouncer 1.5.x
         thus using fatal() was fine, but when autodbs are enabled
         - by '*' in [databases] section - the database name can come
         from network thus making remote shutdown possible.
+
+        [CVE-2012-4575](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-4575)
 
 -   Minor Features
 

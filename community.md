@@ -31,3 +31,5 @@ title: Community
 
 - [PgBouncer section](https://stackoverflow.com/questions/tagged/pgbouncer) at StackOverflow.
 
+- [Chat room](https://gitter.im/pgbouncer/pgbouncer) at Gitter.
+
