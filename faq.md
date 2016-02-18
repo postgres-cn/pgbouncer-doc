@@ -47,7 +47,9 @@ It is possible via some external tools:
 
 ## How to use SSL connections with PgBouncer?
 
-[ TLS support will be in next version of PgBouncer. Build from GIT to get it. ]
+Since version 1.7, PgBouncer has built-in support for TLS.  Just configure it.
+
+[ Old answer for older PgBouncer versions. ]
 
 Use [Stunnel](https://www.stunnel.org/). Since version 4.27 it supports
 PostgreSQL protocol for both client and server side. It is activated by
@@ -88,6 +90,8 @@ or later:
 
 ## How to upgrade PgBouncer without dropping connections?
 
+[ This cannot be done with TLS connections. ]
+
 This is as easy as launching new PgBouncer process with `-R` switch and
 same config:
 
@@ -106,29 +110,6 @@ transports actual file descriptors to new process.
 
 If the takeover does not work for whatever reason, the new process can
 be simply killed, old one notices this and resumes work.
-
-## What should my server_reset_query be?
-
-This depends on pool mode. But in any case there is no need to put
-`ROLLBACK;` into it, as PgBouncer never re-uses connections where
-transaction was left open. If client went away in the middle of
-transaction, the associated server connection will be simply closed.
-
-### Session pooling
-
-    server_reset_query = DISCARD ALL;
-
-This will clean everything.
-
-### Transaction pooling
-
-    server_reset_query =
-
-Yes, empty. In transaction pooling mode the clients should not use any
-session-based features, so there is no need to clean anything. The
-`server_reset_query` would only add unnecessary round-trip between
-transactions and would drop various caches that the next transaction
-would unnecessarily need to fill again.
 
 ## How to know which client is on which server connection?
 
