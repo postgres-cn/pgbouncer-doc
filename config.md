@@ -130,7 +130,10 @@ any
 
 ### auth_query
 
-Query to load user's password from db.
+Query to load user's password from database.
+
+Direct access to pg_shadow requires admin rights. It's preferable to
+use non-admin user that calls SECURITY DEFINER function instead.
 
 Default: `SELECT usename, passwd FROM pg_shadow WHERE usename=$1`
 
@@ -365,18 +368,17 @@ Query sent to server on connection release, before making it available
 to other clients. At that moment no transaction is in progress so it
 should not include `ABORT` or `ROLLBACK`.
 
-A good choice for Postgres 8.2 and below is:
+The query is supposed to clean any changes made to database session so
+that next client gets connection in well-defined state. Default is
+`DISCARD ALL` which cleans everything, but that leaves next client no
+pre-cached state. It can be made lighter, eg `DEALLOCATE ALL` to just
+drop prepared statements, if application does not break when some state
+is kept around.
 
-    server_reset_query = RESET ALL; SET SESSION AUTHORIZATION DEFAULT;
-
-for 8.3 and above its enough to do:
-
-    server_reset_query = DISCARD ALL;
-
-When transaction pooling is used, the [server_reset_query](#serverresetquery) should
-be empty, as clients should not use any session features. If client does
-use session features, then they will be broken as transaction pooling
-will not guarantee that next query will be run on same connection.
+When transaction pooling is used, the [server_reset_query](#serverresetquery) is not
+used, as clients must not use any session-based features as each
+transaction ends up in different connection and thus gets different
+session state.
 
 Default: DISCARD ALL
 
@@ -386,6 +388,11 @@ Whether [server_reset_query](#serverresetquery) should be run in all pooling mod
 When this setting is off (default), the [server_reset_query](#serverresetquery) will
 be run only in pools that are in sessions-pooling mode. Connections in
 transaction-pooling mode should not have any need for reset query.
+
+It is workaround for broken setups that run apps that use session
+features over transaction-pooled pgbouncer. Is changes non-deterministic
+breakage to deterministic breakage - client always lose their state
+after each transaction.
 
 Default: 0
 
@@ -487,7 +494,7 @@ disabled by default. When enabled, [client_tls_key_file](#clienttlskeyfile) and
 [client_tls_cert_file](#clienttlscertfile) must be also configured to set up key and
 cert PgBouncer uses to accept client connections.
 
-disabled
+disable
 :   Plain TCP. If client requests TLS, it's ignored. Default.
 
 allow
@@ -560,7 +567,7 @@ Default: `auto`
 TLS mode to use for connections to PostgreSQL servers. TLS connections
 are disabled by default.
 
-disabled
+disable
 :   Plain TCP. TCP is not event requested from server. Default.
 
 allow
@@ -777,8 +784,11 @@ client username, meaning that there will be one pool per user.
 ### auth_user
 
 If `auth_user` is set, any user not specified in auth_file will be
-queried from pg_shadow in the database using auth_user. Auth_user's
-password will be taken from auth_file.
+queried from pg_shadow in the database using `auth_user`. Auth_user's
+password will be taken from `auth_file`.
+
+Direct access to pg_shadow requires admin rights. It's preferable to
+use non-admin user that calls SECURITY DEFINER function instead.
 
 ### pool_size
 
@@ -918,6 +928,19 @@ Database defaults:
 
     ; access to destination database will go with single user
     forcedb = host=127.0.0.1 port=300 user=baz password=foo client_encoding=UNICODE datestyle=ISO
+
+Example of secure function for auth_query:
+
+    CREATE OR REPLACE FUNCTION pgbouncer.user_lookup(in i_username text, out uname text, out phash text)
+    RETURNS record AS $$
+    BEGIN
+        SELECT usename, passwd FROM pg_catalog.pg_shadow
+        WHERE usename = i_username INTO uname, phash;
+        RETURN;
+    END;
+    $$ LANGUAGE plpgsql SECURITY DEFINER;
+    REVOKE ALL ON FUNCTION pgbouncer.user_lookup(text) FROM public, pgbouncer;
+    GRANT EXECUTE ON FUNCTION pgbouncer.user_lookup(text) TO pgbouncer;
 
 See also
 --------

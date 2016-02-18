@@ -3,6 +3,14 @@
     [
       {
         "basever": "1.7", 
+        "date": "2016-02-18", 
+        "tgz_basename": "pgbouncer-1.7.1.tar.gz", 
+        "tgz_file": "files/1.7.1/pgbouncer-1.7.1.tar.gz", 
+        "tgz_size": 461903, 
+        "version": "1.7.1"
+      }, 
+      {
+        "basever": "1.7", 
         "date": "2015-12-18", 
         "tgz_basename": "pgbouncer-1.7.tar.gz", 
         "tgz_file": "files/1.7/pgbouncer-1.7.tar.gz", 
