@@ -5,10 +5,6 @@ title: Community
 
 ## Tutorials
 
-- [First steps with pgbouncer, how to set and run it.](http://michael.otacoo.com/postgresql-2/first-steps-with-pgbouncer-how-to-set-and-run-it/)
-
-  Building from GIT.
-
 - [Setup pgbouncer connection pooling for PostgreSQL on CentOS/RedHat/Fedora](https://opensourcedbms.com/dbms/setup-pgbouncer-connection-pooling-for-postgresql-on-centosredhatfedora/)
 
   Install on RedHat-based system.
