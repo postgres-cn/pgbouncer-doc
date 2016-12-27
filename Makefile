@@ -4,8 +4,17 @@ all: doc
 clean:
 	rm -rf _site
 
+init:
+	bundle install --path .gems
+
+update:
+	bundle update
+
 serve:
 	bundle exec jekyll serve
+
+fullclean: clean
+	rm -rf .gems .bundle
 
 # generate usage.md & config.md from rst files in pgbouncer repo
 
