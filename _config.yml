@@ -1,7 +1,7 @@
 # Jekyll configuration
 
 name: PgBouncer
-description: Lightweight connection pooler for PostgreSQL
+description: PgBouncer 1.7.2中文手册(翻译：瀚高软件韩悦悦等)
 
 # url is currently only used only for the RSS feed in feed.xml
 url: https://pgbouncer.github.io
@@ -10,7 +10,7 @@ url: https://pgbouncer.github.io
 # be the project name.
 # *** IMPORTANT: If your local "jekyll serve" throws errors change this to '' or
 #     run it like so: jekyll serve --baseurl=''
-baseurl: ''
+baseurl: '/pgbouncer-doc'
 
 # This can be '' to hide the Github nav button
 github: 'pgbouncer/pgbouncer'

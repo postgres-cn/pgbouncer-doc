@@ -19,7 +19,7 @@ fullclean: clean
 # generate usage.md & config.md from rst files in pgbouncer repo
 
 FIX = python _build/md-fix.py
-SRC = ../pgbouncer
+SRC = ../pgbouncer-cn
 DOC = $(SRC)/doc
 
 doc:
