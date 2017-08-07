@@ -5,164 +5,139 @@ title: PgBouncer FAQ
 
 # PgBouncer FAQ
 
-## How to connect to PgBouncer?
+## 如何连接到PgBouncer?
 
-PgBouncer acts as Postgres server, so simply point your client to
-PgBouncer port.
+PgBouncer就像Postgres server，所以只需简单的指定您的客户端到PgBouncer端口。
 
-## How to load-balance queries between several servers?
+## 如何在几个服务器之间均衡的加载查询?
 
-PgBouncer does not have internal multi-host configuration.
-It is possible via some external tools:
+PgBouncer没有内部多主机配置。
+可以通过一些额外的工具实现：
 
-1.  DNS round-robin. Use several IPs behind one DNS name. PgBouncer does
-    not look up DNS each time new connection is launched. Instead it
-    caches all IPs and does round-robin internally. Note: if there is
-    more than 8 IPs behind one name, the DNS backend must support EDNS0
-    protocol. See README for details.
+1.  DNS循环。在一个DNS名称后面使用几个IP。每次新的连接启动时，PgBouncer都不会查找DNS。
+    相反，它缓存所有IP并在内部循环。注意：如果一个名称后面有超过8个IP，
+    则DNS后端必须支持EDNS0协议。详见README。
 
-2.  Use a TCP connection load-balancer. Either
-    [LVS](http://www.linuxvirtualserver.org/) or
-    [HAProxy](http://www.haproxy.org/) seem to be good choices. On
-    PgBouncer side it may be good idea to make `server_lifetime` smaller
-    and also turn `server_round_robin` on - by default idle connections
-    are reused by LIFO algorithm which may work not so well when
-    load-balancing is needed.
+2.  使用TCP连接负载均衡器。[LVS](http://www.linuxvirtualserver.org/)或者
+    [HAProxy](http://www.haproxy.org/)是较好的选择。
+    在PgBouncer方面，最好让 `server_lifetime` 更小，也可以把 `server_round_robin` 打开 - 
+    默认情况下，空闲连接由LIFO算法重用，当需要负载均衡时，这可能不太好。
 
-## How to failover
+## 如何进行故障转移
 
-PgBouncer does not have internal failover-host configuration nor detection.
-It is possible via some external tools:
+PgBouncer没有内部的故障切换主机配置也没有检测。
+可以通过一些外部工具实现：
 
-1. DNS reconfiguration - when ip behind DNS name is reconfigured, pgbouncer
-   will reconnect to new server.  This behaviour can be tuned via 2
-   config parameters - **dns_max_ttl** tunes lifetime for one hostname,
-   and **dns_zone_check_period** tunes how often zone SOA will be
-   queried for changes.  If zone SOA record has changed, pgbouncer
-   will re-query all hostnames under that zone.
+1. DNS重新配置 - 当重新配置DNS名称后的ip时，pgbouncer将重新连接到新服务器。
+   这个行为可以通过2个配置参数进行调整- **dns_max_ttl** 调整一个主机名的生命周期，
+   和 **dns_zone_check_period** 调整区域SOA查询更改的频率。
+   如果区域SOA记录已更改，pgbouncer将重新查询该区域下的所有主机名。
 
-2. Write new host to config and let PgBouncer reload it - send SIGHUP
-   or use RELOAD; command on console.  PgBouncer will detect changed
-   host config and reconnect to new server.
+2. 写新的主机名到配置并让PgBouncer重新加载它 - 在控制台发送SIGHUP或使用RELOAD;命令。
+   PgBouncer将检测修改后的主机配置并重连接到新的服务器。
+   
 
-## How to use SSL connections with PgBouncer?
+## PgBouncer如何使用SSL连接?
 
-Since version 1.7, PgBouncer has built-in support for TLS.  Just configure it.
+自版本1.7以来，PgBouncer对TLS有了内建的支持。只需要配置它。
 
-[ Old answer for older PgBouncer versions. ]
+[ 较老PgBouncer版本的回答 ]
 
-Use [Stunnel](https://www.stunnel.org/). Since version 4.27 it supports
-PostgreSQL protocol for both client and server side. It is activated by
-setting `protocol=pgsql`.
+使用[Stunnel](https://www.stunnel.org/)。自版本4.27以来，
+它在客户端和服务器端都支持PostgreSQL协议。通过设置 `protocol=pgsql` 激活它。
 
-Alternative is to use Stunnel on both sides of connection, then the
-protocol support is not needed.
+可选的是在连接的两端都使用Stunnel，然后就不需要协议支持了。
 
-## How to use prepared statements with session pooling?
+## 会话池如何使用预备语句?
 
-In session pooling mode, the reset query must clean old prepared
-statements.  This can be achieved by `server_reset_query = DISCARD ALL;`
-or at least to `DEALLOCATE ALL;`
+在会话池模式，重置查询必须清理老的预备语句。这可以通过
+`server_reset_query = DISCARD ALL;` 或至少是 `DEALLOCATE ALL;` 来实现。
 
-## How to use prepared statements with transaction pooling?
+## 事务池如何使用预备语句?
 
-To make prepared statements work in this mode would need PgBouncer to
-keep track of them internally, which it does not do. So only way to keep
-using PgBouncer in this mode is to disable prepared statements in the
-client.
+要使预备语句在该模式中可用，将需要PgBouncer在内部保持追踪它们。
+所以在这种模式下保持使用PgBouncer的唯一方法是在客户端禁用预备语句。
 
-### Disabling prepared statements in JDBC
+### 在JDBC中禁用预备语句
 
-The proper way to do it for JDBC is adding `prepareThreshold=0`
-parameter to connect string.
+适合JDBC的方式是添加 `prepareThreshold=0` 参数到连接字符串。
 
-### Disabling prepared statements in PHP/PDO
+### 在PHP/PDO中禁用预备语句
 
-To disable use of server-side prepared statements, the PDO attribute
-`PDO::ATTR_EMULATE_PREPARES` must be set to `true`. Either at
-connect-time:
+要禁用服务器端的预备语句，PD0属性 `PDO::ATTR_EMULATE_PREPARES` 必须设置为
+`true`。在客户端连接时设置：
 
     $db = new PDO("dsn", "user", "pass", array(PDO::ATTR_EMULATE_PREPARES => true));
 
-or later:
+或者稍后设置：
 
     $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
-## How to upgrade PgBouncer without dropping connections?
+## 在不删除连接的情况下如何升级PgBouncer?
 
-[ This cannot be done with TLS connections. ]
+[ 这不能通过TLS连接完成。]
 
-This is as easy as launching new PgBouncer process with `-R` switch and
-same config:
+这和使用 `-R` 开关加载新的PgBouncer进程一样简单，并且配置相同：
 
     $ pgbouncer -R -d config.ini
 
-The `-R` (reboot) switch makes new process connect to console of the old
-process (dbname=pgbouncer) via unix socket and issue following commands:
+`-R` (reboot)开关通过unix套接字让新的进程连接到老进程(dbname=pgbouncer)的控制台，
+并发出下列命令：
 
     SUSPEND;
     SHOW FDS;
     SHUTDOWN;
 
-After that if new one notices old one gone it resumes work with old
-connections. The magic happens during `SHOW FDS` command which
-transports actual file descriptors to new process.
+之后，如果新的进程发现旧进程已经结束了就恢复老的连接的工作。
+魔法发生在 `SHOW FDS` 命令期间，该命令传送实际的文件描述符给新的进程。
 
-If the takeover does not work for whatever reason, the new process can
-be simply killed, old one notices this and resumes work.
+如果接替工作不能正常进行，那么新的进程会被杀死，老的进程继续工作。
 
-## How to know which client is on which server connection?
+## 如何知道哪个客户端连接在哪个服务器上？
 
-Use SHOW CLIENTS and SHOW SERVERS views on console.
+在控制台使用SHOW CLIENTS和SHOW SERVERS视图。
 
-1.  Use `ptr` and `link` to map local client connection to server
-    connection.
+1.  使用 `ptr` 和 `link` 映射本地客户端到服务器的连接。
 
-2.  Use `addr` and `port` of client connection to identify TCP
-    connection from client.
+2.  使用客户端连接的 `addr` 和 `port` 标识来自客户端的TCP连接。
 
-3.  Use `local_addr` and `local_port` to identify TCP connection to
-    server.
+3.  使用 `local_addr` 和 `local_port` 标识到服务器的TCP连接。
 
-### Overview of important fields in SHOW CLIENTS
+### SHOW CLIENTS 中重要字段的概览
 
 addr, port
-: source address of client connection
+: 客户端连接的源地址
 
 local_addr, local_port
-: local endpoint of client connection
+: 客户端连接的本地端点
 
 ptr
-: unique id for this connection
+: 此连接的唯一id
 
 link
-: unique id for server connection this client connection is currently linked to
+: 该客户端当前连接到的服务器连接的唯一id
 
-### Overview of important fields in SHOW SERVERS
+### SHOW SERVERS 中重要字段的概览
 
 addr, port
-: server address pgbouncer connects to
+: pgbouncer连接到的服务器地址
 
 local_addr, local_port
-: connections local endpoint
+: 连接本地端点
 
 ptr
-: unique id for this connection
+: 此连接的唯一id
 
 link
-: unique id for client connection this server connection is currently linked to
+: 该服务器当前连接到的客户端连接的唯一id
 
-## Should PgBouncer be installed on webserver or database server?
+## PgBouncer应该安装在webserver还是数据库服务器上？
 
-It depends. Installing on webserver is good when short-connections are
-used, then the connection setup latency is minimised - TCP requires
-couple of packet roundtrips before connection is usable. Installing on
-database server is good when there are many different hosts (eg.
-webservers) connecting to it, then their connections can be optimised
-together.
+这个要看情况。当使用短的连接，连接设置延迟最小化——在连接可用前TCP需要几个包往返时，
+安装在webserver上是好的。当有许多不同的主机（比如webserver）连接，
+并且它们的连接可以一起优化时，安装在数据库服务器上是好的。
 
-It is also possible to install PgBouncer on both webserver and database
-servers. Only negative aspect of that is that each PgBouncer hop adds
-small amount of latency to each query. So it’s probably best to simply
-test whether the payoff is worth the cost.
+在webserver和数据库服务器上都安装PgBouncer也是可以的。
+唯一不好的一点是每个PgBouncer会给每个查询增加一点延迟。
+所以最好是简单测试下是不是值的这样做。
 

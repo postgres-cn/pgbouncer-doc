@@ -7,74 +7,62 @@ title: PgBouncer features
 
 -   Several levels of brutality when rotating connections:
 
-     Session pooling
-     :  Most polite method. When client connects, a server connection
-        will be assigned to it for the whole duration it stays
-        connected. When client disconnects, the server connection will
-        be put back into pool.
+     Session pooling/会话连接池
+     :  最礼貌的方法。在客户端连接的时候，在它的连接生命期内，
+        会给它赋予一个服务器连接。在客户端断开的时候，服务器连接会放回到连接池中。
 
-     Transaction pooling
-     :  Server connection is assigned to client only during a
-        transaction. When PgBouncer notices that transaction is over,
-        the server will be put back into pool. This is a hack as it
-        breaks application expectations of backend connection. You can
-        use it only when application cooperates with such usage by not
-        using features that can break. See the table below for breaking
-        features.
+     Transaction pooling/事务连接池
+     :  仅在事务期间将服务器连接分配给客户端。当PgBouncer注意到该事务结束时，
+        服务器将被放回到池中。它打破了应用程序对后端连接的期望。
+        只有在应用配合这样的使用模式，没有使用会破坏这种使用模式的时候才能用这个连接方式。
+        参阅下表获取会破坏这种模式的特性。
 
-     Statement pooling
-     :  Most aggressive method. This is transaction pooling with a twist
-        - multi-statement transactions are disallowed. This is meant to
-        enforce "autocommit" mode on client, mostly targeted for
-        PL/Proxy.
+     Statement pooling/语句连接池
+     :  最积极的方法。这是一个事务池的一个扭曲的变种——不允许多语句事务。
+        这意味着在客户端上强制 "autocommit" 模式，主要针对PL/Proxy。
 
--   Low memory requirements (2k per connection by default). This is due
-    to the fact that PgBouncer does not need to see full packet at
-    once.
+-   内存需求低（默认是每个连接2K）。这是因为PgBouncer不需要一次性查看所有包。
 
--   It is not tied to one backend server, the destination databases can
-    reside on different hosts.
+-   它不绑定到一个后端服务器，目标数据库可以位于不同的主机上。
 
--   Supports online reconfiguration for most of the settings.
+-   支持在线重新配置大部分设置。
 
--   Supports online restart/upgrade without dropping client connections.
+-   支持在线重启/升级，而不用删除客户端连接。
 
--   Supports protocol V3 only, so backend version must be \>= 7.4.
+-   仅支持协议V3，所以后端版本必须 \>= 7.4。
 
 
-## SQL feature map for pooling modes
+## 池模式的SQL特性映射
 
-Following table list various PostgreSQL features and whether they are
-ompatible with PgBouncer pooling modes.  Note that 'transaction'
-pooling breaks client expectations of server and can be used only
-if application cooperates by not using non-working features.
+下面的表列出了各种PostgreSQL特性和它们是否能与PgBouncer池模式一起共用。
+请注意， '事务' 池打破了客户端对服务器的期望，
+只有在应用程序不使用非工作功能的情况下才能使用。
 
 |----------------------------------+-----------------+---------------------|
-| Feature                          | Session pooling | Transaction pooling |
+| 特性                             |    会话池      |   事务池            |
 |----------------------------------+-----------------+---------------------|
-| Startup parameters               | Yes [^0]        | Yes [^0]            |
-| SET/RESET                        | Yes             | Never               |
-| LISTEN/NOTIFY                    | Yes             | Never               |
-| WITHOUT HOLD CURSOR              | Yes             | Yes                 |
-| WITH HOLD CURSOR                 | Yes [^1]        | Never               |
-| Protocol-level prepared plans    | Yes [^1]        | No [^2]             |
-| PREPARE / DEALLOCATE             | Yes [^1]        | Never               |
-| ON COMMIT DROP temp tables       | Yes             | Yes                 |
-| PRESERVE/DELETE ROWS temp tables | Yes [^1]        | Never               |
-| Cached plan reset                | Yes [^1]        | Yes [^1]            |
-| LOAD statement                   | Yes             | Never               |
+| 启动参数                         | 支持 [^0]      | 支持 [^0]           |
+| SET/RESET                        | 支持           | 从不支持            |
+| LISTEN/NOTIFY                    | 支持           | 从不支持             |
+| WITHOUT HOLD CURSOR              | 支持           | 支持                 |
+| WITH HOLD CURSOR                 | 支持 [^1]      | 从不支持             |
+| 协议级准备计划                   | 支持 [^1]      | 不支持 [^2]          |
+| PREPARE / DEALLOCATE             | 支持 [^1]      | 从不支持             |
+| ON COMMIT DROP temp tables       | 支持           | 支持                 |
+| PRESERVE/DELETE ROWS temp tables | 支持 [^1]      | 从不支持             |
+| 重置缓存的计划                   | 支持 [^1]      | 支持 [^1]            |
+| LOAD 语句                        | 支持           | 从不支持             |
 |----------------------------------+-----------------+---------------------|
 
 [^0]:
-    Startup parameters are: **client_encoding**, **datestyle**, **timezone**
-    and **standard_conforming_strings**.  PgBouncer can detect their changes
-    so it can guarantee they remain consistent for client.  Available
-    from PgBouncer 1.1.
+    启动参数是: **client_encoding**, **datestyle**, **timezone**
+    和 **standard_conforming_strings**.  PgBouncer 可以检测到它们的改动，
+    所以它可以保证这些参数对客户端保持一致。自PgBouncer 1.1开始可用。
 
 [^1]:
-    Full transparency requires PostgreSQL 8.3 and PgBouncer 1.1 with
+    完全透明要求 PostgreSQL 8.3 和 PgBouncer 1.1 并设置
     `server_reset_query = DISCARD ALL`.
 
 [^2]:
-    It is possible to add support for that into PgBouncer.
+    有望在PgBouncer中添加对它的支持。
 
